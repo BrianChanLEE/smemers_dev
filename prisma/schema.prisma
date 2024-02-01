@@ -1,0 +1,253 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Influencer {
+  id            BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
+  account       String             @unique(map: "account") @db.VarChar(255)
+  image_url     String             @db.VarChar(256)
+  contents      String             @db.VarChar(200)
+  createdAt     DateTime?          @default(now()) @db.Timestamp(0)
+  updatedAt     DateTime?          @default(now()) @db.Timestamp(0)
+  subscribed    Boolean?           @default(false)
+  referral_code String?            @db.VarChar(45)
+  user_id       BigInt?            @db.UnsignedBigInt
+  enabled       Boolean?           @db.Bit(1)
+  website       Influencer_website
+  Notification  Notification[]
+  like          like[]
+  membership    membership[]
+  subscription  subscription[]
+
+  @@index([user_id], map: "fk_influencer__user_id")
+}
+
+model Notification {
+  id            BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  title         String      @db.VarChar(255)
+  message       String      @db.VarChar(2000)
+  createdAt     DateTime?   @default(now()) @db.Timestamp(0)
+  isRead        Boolean?    @default(false)
+  user_Id       BigInt?     @db.UnsignedBigInt
+  influencer_Id BigInt?     @db.UnsignedBigInt
+  store_Id      BigInt?     @db.UnsignedBigInt
+  notice_Id     BigInt?     @db.UnsignedBigInt
+  membership_Id BigInt?     @db.UnsignedBigInt
+  Influencer    Influencer? @relation(fields: [influencer_Id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "notification_influencer_fk")
+  membership    membership? @relation(fields: [membership_Id], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "notification_membership_fk")
+  notices       notices?    @relation(fields: [notice_Id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "notification_notices_fk")
+  store         store?      @relation(fields: [store_Id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "notification_store_fk")
+  user          user?       @relation(fields: [user_Id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "notification_user_fk")
+
+  @@index([influencer_Id], map: "notification_influencer_idx")
+  @@index([membership_Id], map: "notification_membership_idx")
+  @@index([notice_Id], map: "notification_notices_idx")
+  @@index([store_Id], map: "notification_store_idx")
+  @@index([user_Id], map: "notification_user_idx")
+}
+
+model like {
+  id            BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id       BigInt?     @db.UnsignedBigInt
+  notice_id     BigInt?     @db.UnsignedBigInt
+  createdAt     DateTime?   @default(now()) @db.DateTime(0)
+  store_id      BigInt?     @db.UnsignedBigInt
+  influencer_id BigInt?     @db.UnsignedBigInt
+  disabled      Boolean?    @default(true)
+  membership_id BigInt?     @db.UnsignedBigInt
+  user          user?       @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "like_ibfk_1")
+  notices       notices?    @relation(fields: [notice_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "like_ibfk_2")
+  store         store?      @relation(fields: [store_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "like_ibfk_3")
+  Influencer    Influencer? @relation(fields: [influencer_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "like_ibfk_4")
+  membership    membership? @relation(fields: [membership_id], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "like_ibfk_5")
+
+  @@unique([user_id, notice_id, store_id, influencer_id], map: "user_id")
+  @@index([notice_id], map: "like_ibfk_2")
+  @@index([store_id], map: "like_ibfk_3")
+  @@index([influencer_id], map: "like_ibfk_4")
+  @@index([membership_id], map: "like_ibfk_5")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model membership {
+  Id                BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  image             String?        @db.VarChar(300)
+  subject           String?        @db.VarChar(45)
+  description       String?        @db.VarChar(300)
+  UseYn             Boolean?       @db.Bit(1)
+  CreateDate        DateTime?      @default(now()) @db.DateTime(0)
+  expiration_Period DateTime?      @db.DateTime(0)
+  price             String?        @db.VarChar(45)
+  discount_rate     String?        @db.VarChar(45)
+  issuer            String?        @db.VarChar(45)
+  user_Id           BigInt?        @db.UnsignedBigInt
+  influencer_Id     BigInt?        @db.UnsignedBigInt
+  store_Id          BigInt?        @db.UnsignedBigInt
+  Notification      Notification[]
+  like              like[]
+  user              user?          @relation(fields: [user_Id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "membership_ibfk_1")
+  Influencer        Influencer?    @relation(fields: [influencer_Id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "membership_ibfk_2")
+  store             store?         @relation(fields: [store_Id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "membership_ibfk_3")
+  subscription      subscription[]
+
+  @@index([influencer_Id], map: "influencerId")
+  @@index([store_Id], map: "storeId")
+  @@index([user_Id], map: "subscriberId")
+}
+
+model notices {
+  id           BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  subject      String         @db.VarChar(50)
+  contents     String         @db.VarChar(2000)
+  status       notices_status @default(PUBLIC)
+  user_id      BigInt?        @db.UnsignedBigInt
+  StartDate    DateTime?      @db.Date
+  EndDate      DateTime?      @db.Date
+  CreateDate   DateTime?      @default(now()) @db.DateTime(0)
+  Notification Notification[]
+  like         like[]
+  user         user?          @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "notices_FK")
+
+  @@index([user_id], map: "fk_notices__user_id")
+}
+
+model store {
+  id            BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  name          String?        @db.VarChar(65)
+  country       String?        @db.VarChar(45)
+  zip_code      String?        @db.VarChar(121)
+  address       String?        @db.VarChar(121)
+  address_etc   String?        @db.VarChar(121)
+  phone         String?        @db.VarChar(65)
+  open_time     String?        @db.VarChar(255)
+  close_time    String?        @db.VarChar(255)
+  open_days     String?        @db.VarChar(255)
+  website       String?        @db.VarChar(1000)
+  images        String?        @db.VarChar(255)
+  discount_rate Int?
+  kind          String?        @db.VarChar(128)
+  enabled       Boolean?       @db.Bit(1)
+  referral_code String?        @db.VarChar(45)
+  permitted_at  DateTime?      @db.DateTime(6)
+  created_at    DateTime?      @default(now()) @db.Timestamp(0)
+  updated_at    DateTime?      @default(now()) @db.Timestamp(0)
+  removed_at    DateTime?      @db.Timestamp(0)
+  user_id       BigInt?        @db.UnsignedBigInt
+  lat           Float?         @db.Float
+  lng           Float?         @db.Float
+  Notification  Notification[]
+  like          like[]
+  membership    membership[]
+  subscription  subscription[]
+
+  @@index([user_id], map: "fk_store__user_id")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model subscription {
+  id                    BigInt      @id @default(autoincrement()) @db.UnsignedBigInt
+  user_Id               BigInt?     @db.UnsignedBigInt
+  influencer_Id         BigInt?     @db.UnsignedBigInt
+  store_Id              BigInt?     @db.UnsignedBigInt
+  createdAt             DateTime?   @default(now()) @db.Timestamp(0)
+  store_deactivate      Boolean?    @default(false)
+  influencer_deactivate Boolean?    @default(false)
+  membership_Id         BigInt?     @db.UnsignedBigInt
+  membership_deactivate Boolean?    @default(false)
+  user                  user?       @relation(fields: [user_Id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "subscription_ibfk_1")
+  Influencer            Influencer? @relation(fields: [influencer_Id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "subscription_ibfk_2")
+  store                 store?      @relation(fields: [store_Id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "subscription_ibfk_3")
+  membership            membership? @relation(fields: [membership_Id], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "subscription_ibfk_4")
+
+  @@index([influencer_Id], map: "influencerId")
+  @@index([store_Id], map: "storeId")
+  @@index([user_Id], map: "subscriberId")
+  @@index([membership_Id], map: "subscription_FK")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model terms {
+  TermsID                         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  TermsOfServiceAgreement         Boolean
+  PersonalInformationCollection   Boolean
+  PersonalInformationProcessing   Boolean
+  ThirdPartyInformationSharing    Boolean?
+  AdvertisingInformationReception Boolean?
+  user                            user     @relation(fields: [TermsID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "terms_user_FK")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user {
+  id                     BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  email                  String         @unique(map: "email") @db.VarChar(255)
+  role                   user_role      @default(User)
+  verificationCode       String?        @db.VarChar(255)
+  isVerified             Boolean        @default(false)
+  createdAt              DateTime?      @default(now()) @db.Timestamp(0)
+  updatedAt              DateTime?      @default(now()) @db.Timestamp(0)
+  subscribed             Boolean        @default(false)
+  masterbank_wallet_addr String?        @db.VarChar(255)
+  name                   String         @db.VarChar(128)
+  referral_code          String?        @db.VarChar(45)
+  refreshToken           String?        @db.VarChar(255)
+  disabled               Boolean?       @default(false)
+  Notification           Notification[]
+  like                   like[]
+  membership             membership[]
+  notices                notices[]
+  subscription           subscription[]
+  terms                  terms?
+  user_setting           user_setting[]
+}
+
+model user_setting {
+  Id       BigInt                 @id @default(autoincrement()) @db.UnsignedBigInt
+  user_Id  BigInt?                @db.UnsignedBigInt
+  bio_Auth user_setting_bio_Auth?
+  notify   user_setting_notify?
+  user     user?                  @relation(fields: [user_Id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_setting_FK")
+
+  @@index([user_Id], map: "user_setting_FK")
+}
+
+model verification_codes {
+  id                BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  email             String    @db.VarChar(255)
+  verification_code String    @db.VarChar(255)
+  created_at        DateTime? @default(now()) @db.DateTime(0)
+  expires_at        DateTime? @db.DateTime(0)
+}
+
+enum user_role {
+  Admin
+  User
+  Influencer
+  Store
+}
+
+enum user_setting_bio_Auth {
+  ON
+  OFF
+}
+
+enum notices_status {
+  PUBLIC
+  PRIVATE
+}
+
+enum user_setting_notify {
+  ON
+  OFF
+}
+
+enum Influencer_website {
+  instagram
+  tiktok
+  twitter
+  facebook
+}
