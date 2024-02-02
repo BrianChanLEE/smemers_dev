@@ -1,13 +1,13 @@
-import { PrismaClient } from "@prisma/client";
+import {PrismaClient} from '@prisma/client';
 import {
   NoticeRequest,
   Notice,
   NoticeUpdateData,
-} from "@/types/interface/notice_Interface";
-import { Token } from "@/types/interface/Token_Interface";
-import Logger from "@/src/middleware/logger";
+} from '@/types/interface/notice_Interface';
+import {Token} from '@/types/interface/Token_Interface';
+import Logger from '@/src/middleware/logger';
 
-const logger = new Logger("logs");
+const logger = new Logger('logs');
 const prisma = new PrismaClient();
 
 /**
@@ -35,14 +35,14 @@ export async function noticeCreate(req: NoticeRequest, token: Token) {
   try {
     // 사용자의 역할 확인
     const user = await prisma.user.findUnique({
-      where: { id: parseInt(token.id) },
+      where: {id: parseInt(token.id)},
     });
 
     // 사용자가 Admin이 아니거나 사용자 정보가 없는 경우 접근 제한
-    if (!user || user.role !== "Admin") {
+    if (!user || user.role !== 'Admin') {
       return new Response(
-        JSON.stringify({ error: "접근 권한이 없습니다." }),
-        { status: 403 } // Forbidden
+        JSON.stringify({error: '접근 권한이 없습니다.'}),
+        {status: 403}, // Forbidden
       );
     }
 
@@ -50,8 +50,8 @@ export async function noticeCreate(req: NoticeRequest, token: Token) {
     if (!req.subject || !req.contents) {
       // 비어 있는 경우 400 (Bad Request) 상태 코드와 오류 메시지를 반환
       return new Response(
-        JSON.stringify({ error: "제목과 내용을 모두 입력해 주세요." }),
-        { status: 400 }
+        JSON.stringify({error: '제목과 내용을 모두 입력해 주세요.'}),
+        {status: 400},
       );
     }
 
@@ -84,10 +84,10 @@ export async function noticeCreate(req: NoticeRequest, token: Token) {
   } catch (error) {
     if (error instanceof Error) {
       // 오류 발생 시 오류 메시지 출력
-      console.error("noticeCreate error:", error.message);
+      console.error('noticeCreate error:', error.message);
 
       // 서버 내부 오류인 경우 500 (Internal Server Error) 상태 코드와 오류 메시지를 반환
-      return new Response(JSON.stringify({ error: "서버 내부 오류 발생" }), {
+      return new Response(JSON.stringify({error: '서버 내부 오류 발생'}), {
         status: 500,
       });
     }
@@ -120,13 +120,13 @@ export async function findAllNotice() {
 
     if (data.length === 0) {
       return new Response(
-        JSON.stringify({ message: "조회할 공지사항이 없습니다." }),
-        { status: 204 } // No Content
+        JSON.stringify({message: '조회할 공지사항이 없습니다.'}),
+        {status: 204}, // No Content
       );
     }
 
     // 조회된 공지사항 데이터 배열을 직렬화하여 필요한 데이터만 추출
-    const serializedNotice = data.map((notices) => ({
+    const serializedNotice = data.map(notices => ({
       id: notices.id.toString(),
       subject: notices.subject,
       contents: notices.contents,
@@ -141,10 +141,10 @@ export async function findAllNotice() {
   } catch (error) {
     if (error instanceof Error) {
       // 오류 발생 시 오류 메시지 출력
-      console.error("findAllNotice error:", error.message);
+      console.error('findAllNotice error:', error.message);
 
       // 서버 내부 오류인 경우 500 (Internal Server Error) 상태 코드와 오류 메시지를 반환
-      return new Response(JSON.stringify({ error: "서버 내부 오류 발생" }), {
+      return new Response(JSON.stringify({error: '서버 내부 오류 발생'}), {
         status: 500,
       });
     }
@@ -176,21 +176,21 @@ export async function findNoticeById(id: number) {
   try {
     // ID 유효성 검사
     if (!id || id <= 0) {
-      return new Response(JSON.stringify({ error: "잘못된 ID입니다." }), {
+      return new Response(JSON.stringify({error: '잘못된 ID입니다.'}), {
         status: 400,
       }); // Bad Request
     }
 
     // Prisma를 사용하여 주어진 ID로 게시글 조회
     const data = await prisma.notices.findUnique({
-      where: { id: id },
+      where: {id: id},
     });
 
     if (!data) {
       // 조회된 게시글이 없는 경우
       return new Response(
-        JSON.stringify({ message: `ID가 ${id}인 게시글을 찾을 수 없습니다.` }),
-        { status: 404 } // Not Found
+        JSON.stringify({message: `ID가 ${id}인 게시글을 찾을 수 없습니다.`}),
+        {status: 404}, // Not Found
       );
     }
 
@@ -201,11 +201,11 @@ export async function findNoticeById(id: number) {
       contents: data.contents,
     };
 
-    return new Response(JSON.stringify(serializedNotice), { status: 200 }); // OK
+    return new Response(JSON.stringify(serializedNotice), {status: 200}); // OK
   } catch (error) {
     if (error instanceof Error) {
-      console.error("Notice error:", error.message);
-      return new Response(JSON.stringify({ error: "서버 내부 오류 발생" }), {
+      console.error('Notice error:', error.message);
+      return new Response(JSON.stringify({error: '서버 내부 오류 발생'}), {
         status: 500, // Internal Server Error
       });
     }
@@ -236,49 +236,49 @@ export const findAllPrivateNotice = async (token: Token) => {
   try {
     // 사용자의 역할 확인
     const user = await prisma.user.findUnique({
-      where: { id: parseInt(token.id) },
+      where: {id: parseInt(token.id)},
     });
 
     // 사용자가 Admin이 아니거나 사용자 정보가 없는 경우 접근 제한
-    if (!user || user.role !== "Admin") {
+    if (!user || user.role !== 'Admin') {
       return new Response(
-        JSON.stringify({ error: "접근 권한이 없습니다." }),
-        { status: 403 } // Forbidden
+        JSON.stringify({error: '접근 권한이 없습니다.'}),
+        {status: 403}, // Forbidden
       );
     }
 
     // Prisma를 사용하여 공개된 모든 게시글 조회
     const data = await prisma.notices.findMany({
-      where: { status: "PRIVATE" },
+      where: {status: 'PRIVATE'},
     });
 
     if (data.length === 0) {
       return new Response(
-        JSON.stringify({ message: "비공개 게시글이 없습니다." }),
-        { status: 200 } // OK
+        JSON.stringify({message: '비공개 게시글이 없습니다.'}),
+        {status: 200}, // OK
       );
     }
 
     // 조회된 게시글을 직렬화하여 필요한 데이터만 추출
-    const serializedNotice = data.map((notice) => ({
+    const serializedNotice = data.map(notice => ({
       id: notice.id.toString(),
       subject: notice.subject,
       contents: notice.contents,
     }));
 
     return new Response(
-      JSON.stringify({ message: "조회 성공.", serializedNotice }),
-      { status: 200 } // OK
+      JSON.stringify({message: '조회 성공.', serializedNotice}),
+      {status: 200}, // OK
     );
   } catch (error) {
     if (error instanceof Error) {
       console.error(error.message);
       return new Response(
         JSON.stringify({
-          message: "게시글 조회 오류 발생",
+          message: '게시글 조회 오류 발생',
           error: error.message,
         }),
-        { status: 500 } // Internal Server Error
+        {status: 500}, // Internal Server Error
       );
     }
   }
@@ -314,15 +314,15 @@ export const findAllPrivateNotice = async (token: Token) => {
 export async function updateNotice(
   data: NoticeUpdateData,
   noticeId: number,
-  token: Token
+  token: Token,
 ) {
   try {
     // 사용자의 역할 확인
     const user = await prisma.user.findUnique({
-      where: { id: parseInt(token.id) },
+      where: {id: parseInt(token.id)},
     });
-    if (!user || user.role !== "Admin") {
-      return new Response(JSON.stringify({ error: "접근 권한이 없습니다." }), {
+    if (!user || user.role !== 'Admin') {
+      return new Response(JSON.stringify({error: '접근 권한이 없습니다.'}), {
         status: 403,
       });
     }
@@ -330,25 +330,25 @@ export async function updateNotice(
     // 데이터 유효성 검사
     if (!data.subject || !data.contents) {
       return new Response(
-        JSON.stringify({ error: "제목과 내용을 모두 입력해 주세요." }),
-        { status: 400 }
+        JSON.stringify({error: '제목과 내용을 모두 입력해 주세요.'}),
+        {status: 400},
       );
     }
 
     // 게시글 존재 여부 확인
     const existingNotice = await prisma.notices.findUnique({
-      where: { id: noticeId },
+      where: {id: noticeId},
     });
     if (!existingNotice) {
       return new Response(
-        JSON.stringify({ error: "게시글을 찾을 수 없습니다." }),
-        { status: 404 }
+        JSON.stringify({error: '게시글을 찾을 수 없습니다.'}),
+        {status: 404},
       );
     }
 
     // 게시글 업데이트
     const updatedNotice = await prisma.notices.update({
-      where: { id: noticeId },
+      where: {id: noticeId},
       data: {
         subject: data.subject,
         contents: data.contents,
@@ -357,7 +357,7 @@ export async function updateNotice(
       },
     });
 
-    logger.info("게시글 업데이트 성공");
+    logger.info('게시글 업데이트 성공');
     const serializedNotice = {
       id: updatedNotice.id.toString(),
       subject: updatedNotice.subject,
@@ -365,11 +365,11 @@ export async function updateNotice(
       StartDate: updatedNotice.StartDate,
       EndDate: updatedNotice.EndDate,
     };
-    return new Response(JSON.stringify(serializedNotice), { status: 200 });
+    return new Response(JSON.stringify(serializedNotice), {status: 200});
   } catch (error) {
     if (error instanceof Error) {
       logger.error(`처리 중 예외 발생: ${error.message}`);
-      return new Response(JSON.stringify({ error: "서버 내부 오류 발생" }), {
+      return new Response(JSON.stringify({error: '서버 내부 오류 발생'}), {
         status: 500,
       });
     }
@@ -403,53 +403,50 @@ export async function removeNotice(token: Token, id: number) {
   try {
     // 사용자의 역할 확인
     const user = await prisma.user.findUnique({
-      where: { id: parseInt(token.id) },
+      where: {id: parseInt(token.id)},
     });
 
     // 사용자가 Admin이 아니거나 사용자 정보가 없는 경우 접근 제한
-    if (!user || user.role !== "Admin") {
+    if (!user || user.role !== 'Admin') {
       return new Response(
-        JSON.stringify({ error: "접근 권한이 없습니다." }),
-        { status: 403 } // Forbidden
+        JSON.stringify({error: '접근 권한이 없습니다.'}),
+        {status: 403}, // Forbidden
       );
     }
 
     // ID 유효성 검사
     if (!id || id <= 0) {
-      return new Response(JSON.stringify({ error: "잘못된 ID입니다." }), {
+      return new Response(JSON.stringify({error: '잘못된 ID입니다.'}), {
         status: 400, // Bad Request
       });
     }
 
     // Prisma를 사용하여 주어진 ID로 게시글 조회
     const existingNotice = await prisma.notices.findUnique({
-      where: { id: id },
+      where: {id: id},
     });
 
     if (!existingNotice) {
       // 조회된 게시글이 없는 경우
       return new Response(
-        JSON.stringify({ message: `ID가 ${id}인 게시글을 찾을 수 없습니다.` }),
-        { status: 404 } // Not Found
+        JSON.stringify({message: `ID가 ${id}인 게시글을 찾을 수 없습니다.`}),
+        {status: 404}, // Not Found
       );
     }
 
     // 게시글 삭제 처리
     await prisma.notices.delete({
-      where: { id: id },
+      where: {id: id},
     });
 
     // 삭제 성공 메시지 반환
-    return new Response(
-      JSON.stringify({ message: "게시글이 삭제되었습니다." }),
-      {
-        status: 200, // OK
-      }
-    );
+    return new Response(JSON.stringify({message: '게시글이 삭제되었습니다.'}), {
+      status: 200, // OK
+    });
   } catch (error) {
     if (error instanceof Error) {
       logger.error(`게시글 삭제 처리 중 오류 발생: ${error.message}`);
-      return new Response(JSON.stringify({ error: "내부 서버 오류" }), {
+      return new Response(JSON.stringify({error: '내부 서버 오류'}), {
         status: 500, // Internal Server Error
       });
     }

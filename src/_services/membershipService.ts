@@ -1,9 +1,9 @@
-import { PrismaClient } from "@prisma/client";
-import Logger from "@/src/middleware/logger";
-import { createMembershipRequest } from "@/types/interface/membership_Interface";
+import {PrismaClient} from '@prisma/client';
+import Logger from '@/src/middleware/logger';
+import {createMembershipRequest} from '@/types/interface/membership_Interface';
 
 const prisma = new PrismaClient();
-const logger = new Logger("logs");
+const logger = new Logger('logs');
 
 /**
  * 사용자 멤버십 생성 처리 함수
@@ -25,26 +25,26 @@ const logger = new Logger("logs");
  */
 export async function createMembership(
   req: createMembershipRequest,
-  token: any
+  token: any,
 ) {
-  logger.info("새로운 Membership 생성을 시작합니다.");
+  logger.info('새로운 Membership 생성을 시작합니다.');
 
   try {
     // 스토어 또는 인플루언서 인증 여부 확인
     const storeOrInfluencer =
       (await prisma.store.findFirst({
-        where: { user_id: token.id },
+        where: {user_id: token.id},
       })) ||
       (await prisma.influencer.findFirst({
-        where: { user_id: token.id },
+        where: {user_id: token.id},
       }));
-    console.log("storeOrInfluencer :", storeOrInfluencer);
+    console.log('storeOrInfluencer :', storeOrInfluencer);
     if (!storeOrInfluencer || storeOrInfluencer.enabled === false) {
       return new Response(
         JSON.stringify({
-          error: "아직 인증되지 않은 회원입니다. 고객센터에 문의 바랍니다.",
+          error: '아직 인증되지 않은 회원입니다. 고객센터에 문의 바랍니다.',
         }),
-        { status: 403 } // Forbidden
+        {status: 403}, // Forbidden
       );
     }
 
@@ -74,12 +74,12 @@ export async function createMembership(
       price: newMembership.price,
     };
 
-    logger.info("새로운 Membership이 성공적으로 생성되었습니다.");
-    return new Response(JSON.stringify(serializedMembership), { status: 201 });
+    logger.info('새로운 Membership이 성공적으로 생성되었습니다.');
+    return new Response(JSON.stringify(serializedMembership), {status: 201});
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("새로운 Membership 생성 중 오류 발생: " + error.message);
-      return new Response(JSON.stringify({ error: "내부 서버 오류" }), {
+      logger.error('새로운 Membership 생성 중 오류 발생: ' + error.message);
+      return new Response(JSON.stringify({error: '내부 서버 오류'}), {
         status: 500,
       });
     }
@@ -104,21 +104,21 @@ export async function createMembership(
  * 4. 조회 중 오류 발생 시 적절한 상태 코드와 메시지 반환.
  */
 export async function getAllMembership() {
-  logger.info("모든 Membership 조회를 시작합니다.");
+  logger.info('모든 Membership 조회를 시작합니다.');
 
   try {
     const memberships = await prisma.membership.findMany();
-    logger.info("모든 Membership을 조회를 성공적으로 완료했습니다.");
+    logger.info('모든 Membership을 조회를 성공적으로 완료했습니다.');
 
     if (memberships.length === 0) {
       return new Response(
-        JSON.stringify({ message: "조회할 Membership이 없습니다." }),
-        { status: 204 } // No Content
+        JSON.stringify({message: '조회할 Membership이 없습니다.'}),
+        {status: 204}, // No Content
       );
     }
 
     // 생성된 Membership 데이터 직렬화
-    const serializedMemberships = memberships.map((membership) => ({
+    const serializedMemberships = memberships.map(membership => ({
       Id: membership.Id.toString(),
       image: membership.image,
       subject: membership.subject,
@@ -135,8 +135,8 @@ export async function getAllMembership() {
     if (error instanceof Error) {
       logger.error(`Membership 조회 중 오류 발생: ${error.message}`);
       return new Response(
-        JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        JSON.stringify({error: '내부 서버 오류', message: error.message}),
+        {status: 500}, // Internal Server Error
       );
     }
   }
@@ -151,7 +151,7 @@ export async function getAllMembership() {
  *
  * @returns {Response} 업데이트된 구독 정보에 대한 응답
  */
-export async function updateMembershipUseYn(req: any, token: any, Id: any) {
+export async function updateMembershipUseYn(req: any, token: any) {
   try {
     // 현재 보유중인 맴버쉽찾기
     const currentUseYn = await prisma.membership.findFirst({
@@ -163,12 +163,12 @@ export async function updateMembershipUseYn(req: any, token: any, Id: any) {
 
     // 해당 맴버쉽을 보유하고 있지 않는 경우
     if (!currentUseYn) {
-      logger.error("해당 맴버쉽을 찾지 못했습니다.");
+      logger.error('해당 맴버쉽을 찾지 못했습니다.');
       return new Response(
-        JSON.stringify({ error: "해당 맴버쉽을 찾지 못했습니다." }),
+        JSON.stringify({error: '해당 맴버쉽을 찾지 못했습니다.'}),
         {
           status: 404, // Not Found 상태 코드
-        }
+        },
       );
     }
 
@@ -187,11 +187,11 @@ export async function updateMembershipUseYn(req: any, token: any, Id: any) {
       UseYn: currentUseYn.UseYn,
     };
     logger.info(`맴버쉽 업데이트 성공: ${updatedUseYn.Id}`);
-    return new Response(JSON.stringify(serializeUpdatedUseYn), { status: 200 });
+    return new Response(JSON.stringify(serializeUpdatedUseYn), {status: 200});
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("맴버쉽 업데이트 중 오류 발생: " + error.message);
-      return new Response(JSON.stringify({ error: "내부 서버 오류" }), {
+      logger.error('맴버쉽 업데이트 중 오류 발생: ' + error.message);
+      return new Response(JSON.stringify({error: '내부 서버 오류'}), {
         status: 500,
       });
     }

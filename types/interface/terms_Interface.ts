@@ -1,8 +1,8 @@
 export interface RequestTerms {
-  TermsID: BigInt;
-  TermsOfServiceAgreement: Boolean;
-  PersonalInformationCollection: Boolean;
-  PersonalInformationProcessing: Boolean;
-  ThirdPartyInformationSharing: Boolean;
-  AdvertisingInformationReception: Boolean;
+  TermsID: bigint;
+  TermsOfServiceAgreement: boolean;
+  PersonalInformationCollection: boolean;
+  PersonalInformationProcessing: boolean;
+  ThirdPartyInformationSharing: boolean;
+  AdvertisingInformationReception: boolean;
 }

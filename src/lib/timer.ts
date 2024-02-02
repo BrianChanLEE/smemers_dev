@@ -2,7 +2,7 @@ export async function startCountdown(seconds: number) {
   let counter = seconds;
 
   const interval = setInterval(() => {
-    console.log(counter + "");
+    console.log(counter + '');
     counter--;
 
     if (counter < 0) {

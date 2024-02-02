@@ -1,5 +1,3 @@
-import { notices_status } from "@prisma/client";
-
 export interface NotifyMembershipForStoreRequest {
   userId: number;
   store_deactivate: boolean;
@@ -30,8 +28,8 @@ export interface NotifyForNoticesRequest {
 }
 
 enum Notices_status {
-  Public = "PUBLIC",
-  Private = "PRIVATE",
+  Public = 'PUBLIC',
+  Private = 'PRIVATE',
 }
 
 export interface Notification {
@@ -39,3 +37,15 @@ export interface Notification {
   title: string;
   message: string;
 }
+
+export type NotificationType = {
+  id: bigint;
+  title: string;
+  message: string;
+  isRead: boolean;
+  user_Id: bigint;
+  influencer_Id: bigint;
+  store_Id: bigint;
+  notice_Id: bigint;
+  membership_Id: bigint;
+};

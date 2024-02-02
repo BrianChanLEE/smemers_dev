@@ -41,6 +41,6 @@ export interface noticesUpdateInput {
 }
 
 enum notices_status {
-  PUBLIC = "PUBLIC",
-  PRIVATE = "PRIVATE",
+  PUBLIC = 'PUBLIC',
+  PRIVATE = 'PRIVATE',
 }

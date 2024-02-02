@@ -1,13 +1,13 @@
-import { PrismaClient } from "@prisma/client";
+import {PrismaClient} from '@prisma/client';
 
 import {
   bioAuthSettingRequest,
   notifySettingRequest,
-} from "@/types/interface/userSetting_Interface";
-import Logger from "@/src/middleware/logger";
+} from '@/types/interface/userSetting_Interface';
+import Logger from '@/src/middleware/logger';
 
 const prisma = new PrismaClient();
-const logger = new Logger("logs");
+const logger = new Logger('logs');
 
 /**
  * 생체인증 설정 ON/OFF 함수
@@ -25,20 +25,20 @@ const logger = new Logger("logs");
 export async function bioAuthSetting(req: bioAuthSettingRequest, token: any) {
   try {
     const userId = token.id; // 토큰에서 사용자 ID 추출
-    console.log("userId :", userId);
+    console.log('userId :', userId);
     // user_setting에서 사용자 설정 조회
     const existingSetting = await prisma.user_setting.findFirst({
-      where: { user_Id: userId },
+      where: {user_Id: userId},
     });
 
     let setBioAuth;
     if (existingSetting) {
       // 기존 설정이 있는 경우, bio_Auth의 값을 반전시킴
       setBioAuth = await prisma.user_setting.update({
-        where: { Id: existingSetting.Id },
+        where: {Id: existingSetting.Id},
         data: {
           user_Id: userId,
-          bio_Auth: existingSetting.bio_Auth === "ON" ? "OFF" : "ON",
+          bio_Auth: existingSetting.bio_Auth === 'ON' ? 'OFF' : 'ON',
         },
       });
     } else {
@@ -46,15 +46,15 @@ export async function bioAuthSetting(req: bioAuthSettingRequest, token: any) {
       setBioAuth = await prisma.user_setting.create({
         data: {
           user_Id: userId,
-          bio_Auth: "ON",
+          bio_Auth: 'ON',
         },
       });
     }
 
     logger.info(
       `사용자 ID ${userId}의 생체 인증 설정이 ${
-        setBioAuth.bio_Auth === "ON" ? "켜짐" : "꺼짐"
-      }으로 설정되었습니다.`
+        setBioAuth.bio_Auth === 'ON' ? '켜짐' : '꺼짐'
+      }으로 설정되었습니다.`,
     );
 
     const serializedBioSet = {
@@ -67,11 +67,11 @@ export async function bioAuthSetting(req: bioAuthSettingRequest, token: any) {
       JSON.stringify({
         success: true,
         message: `생체 인증 설정이 ${
-          setBioAuth.bio_Auth === "ON" ? "켜짐" : "꺼짐"
+          setBioAuth.bio_Auth === 'ON' ? '켜짐' : '꺼짐'
         }으로 설정됨`,
         serializedBioSet,
       }),
-      { status: 200 }
+      {status: 200},
     );
   } catch (error) {
     if (error instanceof Error) {
@@ -81,10 +81,10 @@ export async function bioAuthSetting(req: bioAuthSettingRequest, token: any) {
       });
       return new Response(
         JSON.stringify({
-          error: "내부 서버 오류",
+          error: '내부 서버 오류',
           message: error.message,
         }),
-        { status: 500 }
+        {status: 500},
       );
     }
   }
@@ -109,27 +109,27 @@ export async function notifySetting(req: notifySettingRequest, token: any) {
 
     // user_setting에서 사용자 설정 조회
     const existingSetting = await prisma.user_setting.findFirst({
-      where: { user_Id: userId },
+      where: {user_Id: userId},
     });
 
     let setNotify;
     if (existingSetting) {
       // 기존 설정이 있는 경우, 알림 설정을 반전
       setNotify = await prisma.user_setting.update({
-        where: { Id: existingSetting.Id },
-        data: { notify: existingSetting.notify === "ON" ? "OFF" : "ON" },
+        where: {Id: existingSetting.Id},
+        data: {notify: existingSetting.notify === 'ON' ? 'OFF' : 'ON'},
       });
     } else {
       // 설정이 없는 경우, 새로운 설정을 생성
       setNotify = await prisma.user_setting.create({
-        data: { user_Id: userId, notify: "ON" },
+        data: {user_Id: userId, notify: 'ON'},
       });
     }
 
     logger.info(
       `사용자 ID ${userId}의 알림 설정이 ${
-        setNotify.notify === "ON" ? "켜짐" : "꺼짐"
-      }으로 설정되었습니다.`
+        setNotify.notify === 'ON' ? '켜짐' : '꺼짐'
+      }으로 설정되었습니다.`,
     );
 
     const serializednotifySet = {
@@ -143,11 +143,11 @@ export async function notifySetting(req: notifySettingRequest, token: any) {
       JSON.stringify({
         success: true,
         message: `알림 설정이 ${
-          setNotify.notify === "ON" ? "켜짐" : "꺼짐"
+          setNotify.notify === 'ON' ? '켜짐' : '꺼짐'
         }으로 설정됨`,
         serializednotifySet,
       }),
-      { status: 200 }
+      {status: 200},
     );
   } catch (error) {
     if (error instanceof Error) {
@@ -157,10 +157,10 @@ export async function notifySetting(req: notifySettingRequest, token: any) {
       });
       return new Response(
         JSON.stringify({
-          error: "내부 서버 오류",
+          error: '내부 서버 오류',
           message: error.message,
         }),
-        { status: 500 }
+        {status: 500},
       );
     }
   }

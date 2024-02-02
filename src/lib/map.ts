@@ -1,5 +1,5 @@
-import Logger from "@/src/middleware/logger";
-const logger = new Logger("logs");
+import Logger from '@/src/middleware/logger';
+const logger = new Logger('logs');
 
 /************************************************************************************************************/
 // Haversine 공식을 이용하여 두 지점 사이의 거리를 계산하는 함수
@@ -7,7 +7,7 @@ export async function getDistanceFromLatLonInKm(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number
+  lon2: number,
 ) {
   // 도(degree)를 라디안(radian) 단위로 변환하는 내부 함수
   function deg2rad(deg: number) {
@@ -60,7 +60,7 @@ export function getDistanceFromLatLonInMeters(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number
+  lon2: number,
 ) {
   // 도(degree)를 라디안(radian) 단위로 변환하는 내부 함수
   function deg2rad(deg: number) {
@@ -112,7 +112,7 @@ export function getDistanceFromLatLonInMetersEquirectangular(
   lat1: number,
   lon1: number,
   lat2: number,
-  lon2: number
+  lon2: number,
 ) {
   // 도(degree)를 라디안(radian) 단위로 변환하는 내부 함수
   function deg2rad(deg: number): number {
@@ -128,7 +128,7 @@ export function getDistanceFromLatLonInMetersEquirectangular(
     if (error instanceof Error) {
       // 오류 발생 시, 오류 메시지를 로그로 기록하고 오류를 던집니다.
       logger.error(
-        `직사각형 근사법을 사용한 거리 계산 중 오류 발생: ${error.message}`
+        `직사각형 근사법을 사용한 거리 계산 중 오류 발생: ${error.message}`,
       );
       throw new Error(`직사각형 근사법을 사용한 거리 계산 중 오류 발생`);
     }

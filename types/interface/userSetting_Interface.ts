@@ -9,8 +9,8 @@ export interface BioRequestBody {
 }
 
 enum user_setting_bio_Auth {
-  on = "ON",
-  off = "OFF",
+  on = 'ON',
+  off = 'OFF',
 }
 
 export interface notifySettingRequest {
@@ -24,6 +24,6 @@ export interface NotifyRequestBody {
 }
 
 enum user_setting_notify {
-  on = "ON",
-  off = "OFF",
+  on = 'ON',
+  off = 'OFF',
 }

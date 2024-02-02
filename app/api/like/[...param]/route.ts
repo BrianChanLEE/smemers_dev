@@ -1,44 +1,36 @@
-import * as likeService from "@/src/_services/likeServices";
-import Logger from "@/src/middleware/logger";
-import { verifyJwt } from "@/src/lib/jwt";
-import { Token } from "@/types/interface/Token_Interface";
-import {
-  RemoveStoreLikeRequest,
-  RemoveInfluencerLikeRequest,
-  RemoveNoticeLikeRequest,
-} from "@/types/interface/like_Interface";
+import * as likeService from '@/src/_services/likeServices';
+import Logger from '@/src/middleware/logger';
+import {verifyJwt} from '@/src/lib/jwt';
+import {Token} from '@/types/interface/Token_Interface';
 
 const handler = async (req: any, context: any) => {
-  console.log("context :", context);
-  const { params } = context;
+  console.log('context :', context);
+  const {params} = context;
   const method = req.method;
-  const param1 = params.param[0] as String;
-  const param2 = params.param[1] as Number;
-  const accessToken = req.headers.get("authorization");
+  const param1 = params.param[0] as string;
+  const param2 = params.param[1] as number;
+  const accessToken = req.headers.get('authorization');
 
-  const logger = new Logger("logs");
+  const logger = new Logger('logs');
   logger.info(`요청 시작: ${method} ${param1} ${param2}`);
   switch (req.method) {
-    case "POST":
+    case 'POST':
       try {
-        if (param1 === "likeNotice") {
+        if (param1 === 'likeNotice') {
           // 인증 토큰 검증
           if (!accessToken) {
-            logger.error("인증 토큰 누락");
-            return new Response(JSON.stringify({ error: "인증 없음" }), {
+            logger.error('인증 토큰 누락');
+            return new Response(JSON.stringify({error: '인증 없음'}), {
               status: 401,
             });
           }
 
           const jwtPayload = verifyJwt(accessToken);
           if (!jwtPayload || !jwtPayload.id) {
-            logger.error("인증 토큰 검증 실패");
-            return new Response(
-              JSON.stringify({ error: "유효하지 않은 토큰" }),
-              {
-                status: 401,
-              }
-            );
+            logger.error('인증 토큰 검증 실패');
+            return new Response(JSON.stringify({error: '유효하지 않은 토큰'}), {
+              status: 401,
+            });
           }
 
           const token = {
@@ -51,65 +43,62 @@ const handler = async (req: any, context: any) => {
 
           // 좋아요 요청 본문 파싱
           const body = await req.json();
-          logger.info("좋아요 요청 본문 파싱 완료");
+          logger.info('좋아요 요청 본문 파싱 완료');
 
           // 공지사항에 대한 좋아요 서비스 호출
           const response = await likeService.createLikeNotice(body, token);
           const createLikeNoticeResult = await response!.json();
-          logger.info("좋아요 서비스 요청 완료");
+          logger.info('좋아요 서비스 요청 완료');
 
           if (!createLikeNoticeResult || createLikeNoticeResult.error) {
             // 좋아요 생성 실패
-            logger.error("좋아요 요청 실패");
+            logger.error('좋아요 요청 실패');
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "좋아요 생성 실패",
+                message: '좋아요 생성 실패',
                 error: createLikeNoticeResult.error,
               }),
-              { status: createLikeNoticeResult.status || 500 }
+              {status: createLikeNoticeResult.status || 500},
             );
           } else if (createLikeNoticeResult.alreadyExists) {
             // 이미 좋아요가 존재하는 경우
-            logger.info("좋아요 이미 존재함");
+            logger.info('좋아요 이미 존재함');
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "좋아요 이미 존재함",
+                message: '좋아요 이미 존재함',
                 data: createLikeNoticeResult,
               }),
-              { status: 200 } // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
+              {status: 200}, // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
             );
           } else {
             // 좋아요 생성 성공
-            logger.info("좋아요 제거 요청 성공");
+            logger.info('좋아요 제거 요청 성공');
             return new Response(
               JSON.stringify({
                 success: true,
                 data: createLikeNoticeResult,
               }),
-              { status: 201 } // 새로운 좋아요 생성 후 201 반환
+              {status: 201}, // 새로운 좋아요 생성 후 201 반환
             );
           }
         }
-        if (param1 === "likeMembership") {
+        if (param1 === 'likeMembership') {
           // 인증 토큰 검증
           if (!accessToken) {
-            logger.error("인증 토큰 누락");
-            return new Response(JSON.stringify({ error: "인증 없음" }), {
+            logger.error('인증 토큰 누락');
+            return new Response(JSON.stringify({error: '인증 없음'}), {
               status: 401,
             });
           }
 
           const jwtPayload = verifyJwt(accessToken);
           if (!jwtPayload || !jwtPayload.id) {
-            logger.error("인증 토큰 검증 실패");
-            return new Response(
-              JSON.stringify({ error: "유효하지 않은 토큰" }),
-              {
-                status: 401,
-              }
-            );
+            logger.error('인증 토큰 검증 실패');
+            return new Response(JSON.stringify({error: '유효하지 않은 토큰'}), {
+              status: 401,
+            });
           }
 
           const token: Token = {
@@ -122,68 +111,65 @@ const handler = async (req: any, context: any) => {
 
           // 좋아요 요청 본문 파싱
           const body = await req.json();
-          logger.info("좋아요 요청 본문 파싱 완료");
-          console.log("body :", body);
+          logger.info('좋아요 요청 본문 파싱 완료');
+          console.log('body :', body);
           // 공지사항에 대한 좋아요 서비스 호출
           const response = await likeService.CreateLikeMembership(body, token);
           const createLikeMembershipResult = await response!.json();
-          logger.info("좋아요 서비스 요청 완료");
+          logger.info('좋아요 서비스 요청 완료');
 
           if (!createLikeMembershipResult || createLikeMembershipResult.error) {
             // 좋아요 생성 실패
-            logger.error("좋아요 요청 실패");
+            logger.error('좋아요 요청 실패');
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "좋아요 생성 실패",
+                message: '좋아요 생성 실패',
                 error: createLikeMembershipResult.error,
               }),
-              { status: createLikeMembershipResult.status || 500 }
+              {status: createLikeMembershipResult.status || 500},
             );
           } else if (createLikeMembershipResult.alreadyExists) {
             // 이미 좋아요가 존재하는 경우
-            logger.info("좋아요 이미 존재함");
+            logger.info('좋아요 이미 존재함');
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "좋아요 이미 존재함",
+                message: '좋아요 이미 존재함',
                 data: createLikeMembershipResult,
               }),
-              { status: 200 } // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
+              {status: 200}, // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
             );
           } else {
             // 좋아요 생성 성공
-            logger.info("좋아요 제거 요청 성공");
+            logger.info('좋아요 제거 요청 성공');
             return new Response(
               JSON.stringify({
                 success: true,
                 data: createLikeMembershipResult,
               }),
-              { status: 201 } // 새로운 좋아요 생성 후 201 반환
+              {status: 201}, // 새로운 좋아요 생성 후 201 반환
             );
           }
         }
         // (다른 'param1' 값에 대한 처리 부분 추가)
 
         // (다른 'param1' 값에 대한 처리 부분 추가)
-        if (param1 === "likeInfluencer") {
+        if (param1 === 'likeInfluencer') {
           // 인증 토큰 검증
           if (!accessToken) {
-            logger.error("인증 토큰 누락");
-            return new Response(JSON.stringify({ error: "인증 없음" }), {
+            logger.error('인증 토큰 누락');
+            return new Response(JSON.stringify({error: '인증 없음'}), {
               status: 401,
             });
           }
 
           const jwtPayload = verifyJwt(accessToken);
           if (!jwtPayload || !jwtPayload.id) {
-            logger.error("인증 토큰 검증 실패");
-            return new Response(
-              JSON.stringify({ error: "유효하지 않은 토큰" }),
-              {
-                status: 401,
-              }
-            );
+            logger.error('인증 토큰 검증 실패');
+            return new Response(JSON.stringify({error: '유효하지 않은 토큰'}), {
+              status: 401,
+            });
           }
 
           const token: Token = {
@@ -196,67 +182,64 @@ const handler = async (req: any, context: any) => {
 
           // 좋아요 요청 본문 파싱
           const body = await req.json();
-          logger.info("좋아요 요청 본문 파싱 완료");
+          logger.info('좋아요 요청 본문 파싱 완료');
 
           // 인플루언서에 대한 좋아요 서비스 호출
           const response = await likeService.createLikeInfluencer(body, token);
           const createLikeInfluencerResult = await response!.json();
-          logger.info("좋아요 서비스 요청 완료");
+          logger.info('좋아요 서비스 요청 완료');
 
           if (!createLikeInfluencerResult || createLikeInfluencerResult.error) {
             // 좋아요 생성 실패
-            logger.error("좋아요 요청 실패");
+            logger.error('좋아요 요청 실패');
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "좋아요 생성 실패",
+                message: '좋아요 생성 실패',
                 error: createLikeInfluencerResult.error,
               }),
-              { status: createLikeInfluencerResult.status || 500 }
+              {status: createLikeInfluencerResult.status || 500},
             );
           } else if (createLikeInfluencerResult.alreadyExists) {
             // 이미 좋아요가 존재하는 경우
-            logger.info("좋아요 이미 존재함");
+            logger.info('좋아요 이미 존재함');
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "좋아요 이미 존재함",
+                message: '좋아요 이미 존재함',
                 data: createLikeInfluencerResult,
               }),
-              { status: 200 } // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
+              {status: 200}, // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
             );
           } else {
             // 좋아요 생성 성공
-            logger.info("좋아요 제거 요청 성공");
+            logger.info('좋아요 제거 요청 성공');
             return new Response(
               JSON.stringify({
                 success: true,
                 data: createLikeInfluencerResult,
               }),
-              { status: 201 } // 새로운 좋아요 생성 후 201 반환
+              {status: 201}, // 새로운 좋아요 생성 후 201 반환
             );
           }
         }
         // (다른 'param1' 값에 대한 처리 부분 추가)
 
-        if (param1 === "likeStore") {
+        if (param1 === 'likeStore') {
           // 인증 토큰 검증
           if (!accessToken) {
-            logger.error("인증 토큰 누락");
-            return new Response(JSON.stringify({ error: "인증 없음" }), {
+            logger.error('인증 토큰 누락');
+            return new Response(JSON.stringify({error: '인증 없음'}), {
               status: 401,
             });
           }
 
           const jwtPayload = verifyJwt(accessToken);
           if (!jwtPayload || !jwtPayload.id) {
-            logger.error("인증 토큰 검증 실패");
-            return new Response(
-              JSON.stringify({ error: "유효하지 않은 토큰" }),
-              {
-                status: 401,
-              }
-            );
+            logger.error('인증 토큰 검증 실패');
+            return new Response(JSON.stringify({error: '유효하지 않은 토큰'}), {
+              status: 401,
+            });
           }
 
           const token: Token = {
@@ -271,44 +254,44 @@ const handler = async (req: any, context: any) => {
 
           // 좋아요 요청 본문 파싱
           const body = await req.json();
-          logger.info("좋아요 요청 본문 파싱 완료");
+          logger.info('좋아요 요청 본문 파싱 완료');
 
           // 상점에 대한 좋아요 서비스 호출
           const response = await likeService.createLikeStore(body, token);
           const createLikeStoreResult = await response?.json();
-          logger.info("좋아요 서비스 요청 완료");
+          logger.info('좋아요 서비스 요청 완료');
 
           if (!createLikeStoreResult || createLikeStoreResult.error) {
             // 좋아요 생성 실패
-            logger.error("좋아요 요청 실패");
+            logger.error('좋아요 요청 실패');
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "좋아요 생성 실패",
+                message: '좋아요 생성 실패',
                 error: createLikeStoreResult.error,
               }),
-              { status: createLikeStoreResult.status || 500 }
+              {status: createLikeStoreResult.status || 500},
             );
           } else if (createLikeStoreResult.alreadyExists) {
             // 이미 좋아요가 존재하는 경우
-            logger.info("좋아요 이미 존재함");
+            logger.info('좋아요 이미 존재함');
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "좋아요 이미 존재함",
+                message: '좋아요 이미 존재함',
                 data: createLikeStoreResult,
               }),
-              { status: 200 } // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
+              {status: 200}, // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
             );
           } else {
             // 좋아요 생성 성공
-            logger.info("좋아요 제거 요청 성공");
+            logger.info('좋아요 제거 요청 성공');
             return new Response(
               JSON.stringify({
                 success: true,
                 data: createLikeStoreResult,
               }),
-              { status: 201 } // 새로운 좋아요 생성 후 201 반환
+              {status: 201}, // 새로운 좋아요 생성 후 201 반환
             );
           }
         }
@@ -316,33 +299,30 @@ const handler = async (req: any, context: any) => {
         if (error instanceof Error) {
           logger.error(`처리 중 예외 발생: ${error.message}`);
           return new Response(
-            JSON.stringify({ error: "서버 내부 오류", message: error.message }),
-            { status: 500 }
+            JSON.stringify({error: '서버 내부 오류', message: error.message}),
+            {status: 500},
           );
         }
       }
       break;
 
-    case "GET":
+    case 'GET':
       try {
-        if (param1 === "likeNoticeList") {
+        if (param1 === 'likeNoticeList') {
           // 인증 토큰 검증
           if (!accessToken) {
-            logger.error("인증 토큰 누락");
-            return new Response(JSON.stringify({ error: "인증 없음" }), {
+            logger.error('인증 토큰 누락');
+            return new Response(JSON.stringify({error: '인증 없음'}), {
               status: 401,
             });
           }
 
           const jwtPayload = verifyJwt(accessToken);
           if (!jwtPayload || !jwtPayload.id) {
-            logger.error("인증 토큰 검증 실패");
-            return new Response(
-              JSON.stringify({ error: "유효하지 않은 토큰" }),
-              {
-                status: 401,
-              }
-            );
+            logger.error('인증 토큰 검증 실패');
+            return new Response(JSON.stringify({error: '유효하지 않은 토큰'}), {
+              status: 401,
+            });
           }
 
           const token: Token = {
@@ -358,52 +338,51 @@ const handler = async (req: any, context: any) => {
           const getLikeNoticeListResult = await response!.json();
 
           if (!getLikeNoticeListResult) {
-            logger.error("리스트 요청 실패");
+            logger.error('리스트 요청 실패');
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "리스트 요청 실패",
+                message: '리스트 요청 실패',
                 error: getLikeNoticeListResult.error,
               }),
-              { status: getLikeNoticeListResult.status || 500 }
+              {status: getLikeNoticeListResult.status || 500},
             );
           } else if (getLikeNoticeListResult.length === 0) {
             // 좋아요 누른 공지사항이 없는 경우
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "좋아한 공지사항이 없습니다.",
+                message: '좋아한 공지사항이 없습니다.',
               }),
-              { status: 204 }
+              {status: 204},
             );
           } else {
             // 좋아요 누른 공지사항 목록 조회 성공
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "좋아요 목록 조회 성공",
+                message: '좋아요 목록 조회 성공',
                 data: getLikeNoticeListResult,
               }),
-              { status: 200 }
+              {status: 200},
             );
           }
         }
-        if (param1 === "likeInfluencerList") {
+        if (param1 === 'likeInfluencerList') {
           // 인증 토큰 검증
           if (!accessToken) {
-            logger.error("인증 토큰 누락");
-            return new Response(JSON.stringify({ error: "인증 없음" }), {
+            logger.error('인증 토큰 누락');
+            return new Response(JSON.stringify({error: '인증 없음'}), {
               status: 401,
             });
           }
 
           const jwtPayload = verifyJwt(accessToken);
           if (!jwtPayload || !jwtPayload.id) {
-            logger.error("인증 토큰 검증 실패");
-            return new Response(
-              JSON.stringify({ error: "유효하지 않은 토큰" }),
-              { status: 401 }
-            );
+            logger.error('인증 토큰 검증 실패');
+            return new Response(JSON.stringify({error: '유효하지 않은 토큰'}), {
+              status: 401,
+            });
           }
 
           const token: Token = {
@@ -419,52 +398,51 @@ const handler = async (req: any, context: any) => {
           const getLikeListForInfluencerResult = await response!.json();
 
           if (!getLikeListForInfluencerResult) {
-            logger.error("리스트 요청 실패");
+            logger.error('리스트 요청 실패');
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "리스트 요청 실패",
+                message: '리스트 요청 실패',
                 error: getLikeListForInfluencerResult.error,
               }),
-              { status: getLikeListForInfluencerResult.status || 500 }
+              {status: getLikeListForInfluencerResult.status || 500},
             );
           } else if (getLikeListForInfluencerResult.length === 0) {
             // 좋아요 누른 인플루언서가 없는 경우
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "좋아한 인플루언서가 없습니다.",
+                message: '좋아한 인플루언서가 없습니다.',
               }),
-              { status: 204 }
+              {status: 204},
             );
           } else {
             // 좋아요 누른 인플루언서 목록 조회 성공
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "좋아요 목록 조회 성공",
+                message: '좋아요 목록 조회 성공',
                 data: getLikeListForInfluencerResult,
               }),
-              { status: 200 }
+              {status: 200},
             );
           }
         }
-        if (param1 === "likeStoreList") {
+        if (param1 === 'likeStoreList') {
           // 인증 토큰 검증
           if (!accessToken) {
-            logger.error("인증 토큰 누락");
-            return new Response(JSON.stringify({ error: "인증 없음" }), {
+            logger.error('인증 토큰 누락');
+            return new Response(JSON.stringify({error: '인증 없음'}), {
               status: 401,
             });
           }
 
           const jwtPayload = verifyJwt(accessToken);
           if (!jwtPayload || !jwtPayload.id) {
-            logger.error("인증 토큰 검증 실패");
-            return new Response(
-              JSON.stringify({ error: "유효하지 않은 토큰" }),
-              { status: 401 }
-            );
+            logger.error('인증 토큰 검증 실패');
+            return new Response(JSON.stringify({error: '유효하지 않은 토큰'}), {
+              status: 401,
+            });
           }
 
           const token: Token = {
@@ -479,52 +457,51 @@ const handler = async (req: any, context: any) => {
           const getLikeListForStoreResult = await response?.json();
 
           if (!getLikeListForStoreResult) {
-            logger.error("리스트 요청 실패");
+            logger.error('리스트 요청 실패');
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "리스트 요청 실패",
+                message: '리스트 요청 실패',
                 error: getLikeListForStoreResult.error,
               }),
-              { status: getLikeListForStoreResult.status || 500 }
+              {status: getLikeListForStoreResult.status || 500},
             );
           } else if (getLikeListForStoreResult.length === 0) {
             // 좋아요 누른 가게 없는 경우
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "좋아한 가게가 없습니다.",
+                message: '좋아한 가게가 없습니다.',
               }),
-              { status: 204 }
+              {status: 204},
             );
           } else {
             // 좋아요 누른 가게 목록 조회 성공
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "좋아요 목록 조회 성공",
+                message: '좋아요 목록 조회 성공',
                 data: getLikeListForStoreResult,
               }),
-              { status: 200 }
+              {status: 200},
             );
           }
         }
-        if (param1 === "likeMembershipList") {
+        if (param1 === 'likeMembershipList') {
           // 인증 토큰 검증
           if (!accessToken) {
-            logger.error("인증 토큰 누락");
-            return new Response(JSON.stringify({ error: "인증 없음" }), {
+            logger.error('인증 토큰 누락');
+            return new Response(JSON.stringify({error: '인증 없음'}), {
               status: 401,
             });
           }
 
           const jwtPayload = verifyJwt(accessToken);
           if (!jwtPayload || !jwtPayload.id) {
-            logger.error("인증 토큰 검증 실패");
-            return new Response(
-              JSON.stringify({ error: "유효하지 않은 토큰" }),
-              { status: 401 }
-            );
+            logger.error('인증 토큰 검증 실패');
+            return new Response(JSON.stringify({error: '유효하지 않은 토큰'}), {
+              status: 401,
+            });
           }
 
           const token: Token = {
@@ -539,33 +516,33 @@ const handler = async (req: any, context: any) => {
           const getLikeListForMembershipResult = await response?.json();
 
           if (!getLikeListForMembershipResult) {
-            logger.error("리스트 요청 실패");
+            logger.error('리스트 요청 실패');
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "리스트 요청 실패",
+                message: '리스트 요청 실패',
                 error: getLikeListForMembershipResult.error,
               }),
-              { status: getLikeListForMembershipResult.status || 500 }
+              {status: getLikeListForMembershipResult.status || 500},
             );
           } else if (getLikeListForMembershipResult.length === 0) {
             // 좋아요 누른 가게 없는 경우
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "좋아한 멤버쉽이 없습니다.",
+                message: '좋아한 멤버쉽이 없습니다.',
               }),
-              { status: 204 }
+              {status: 204},
             );
           } else {
             // 좋아요 누른 가게 목록 조회 성공
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "좋아요 목록 조회 성공",
+                message: '좋아요 목록 조회 성공',
                 data: getLikeListForMembershipResult,
               }),
-              { status: 200 }
+              {status: 200},
             );
           }
         }
@@ -574,15 +551,15 @@ const handler = async (req: any, context: any) => {
           // 예외 처리: 내부 서버 오류
           logger.error(`처리 중 예외 발생: ${error.message}`);
           return new Response(
-            JSON.stringify({ error: "Internal server error" }),
-            { status: 500 }
+            JSON.stringify({error: 'Internal server error'}),
+            {status: 500},
           );
         }
       }
       break;
   }
 };
-export { handler as POST, handler as GET, handler as DELETE };
+export {handler as POST, handler as GET, handler as DELETE};
 
 //  case "DELETE":
 //       try {

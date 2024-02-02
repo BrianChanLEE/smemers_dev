@@ -13,15 +13,30 @@
   "author": "CHAN",
   "license": "ISC",
   "scripts": {
-    "dev": "next dev ",
+    "start": "next start",
+    "dev": "nodemon --exec 'prettier --write . && eslint --fix . && next dev'",
     "build": "next build",
-    "start": "next start"
+    "postinstall": "husky install",
+    "format": "prettier --cache --write .",
+    "test": "jest --passWithNoTests",
+    "prepare": "husky install",
+    "lint-fix": "eslint '**/*.{ts,tsx}' --ext .ts, -tsx --fix",
+    "lint-staged": "lint-staged"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx}": [
+      "eslint --fix"
+    ]
   },
   "dependencies": {
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "@babel/preset-typescript": "^7.23.3",
     "@prisma/client": "^5.7.0",
     "@types/bcrypt": "^5.0.2",
     "@types/dotenv": "^8.2.0",
     "@types/jsonwebtoken": "^9.0.5",
+    "babel-jest": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
     "next": "^14.1.0",
     "next-auth": "^4.24.5",
@@ -30,21 +45,28 @@
     "npm": "^10.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
     "winston": "^3.11.0"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.12",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
     "autoprefixer": "^10.0.1",
     "cspell": "^8.3.2",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
+    "husky": "^8.0.0",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.2.1",
     "nodemon": "^3.0.1",
     "postcss": "^8",
     "prettier": "^3.2.4",
     "prisma": "^5.7.0",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5.3.3"
   }
 }

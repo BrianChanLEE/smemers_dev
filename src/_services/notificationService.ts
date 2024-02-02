@@ -1,15 +1,11 @@
-import { Identifier } from "./../../node_modules/acorn/dist/acorn.d";
-import { PrismaClient } from "@prisma/client";
+import {PrismaClient} from '@prisma/client';
 import {
-  NotifyMembershipForStoreRequest,
-  NotifyMembershipForInfluencerRequest,
-  NotifyForNoticesRequest,
   Token,
-  Notification,
-} from "@/types/interface/notification_Interface";
-import Logger from "@/src/middleware/logger";
+  NotificationType,
+} from '@/types/interface/notification_Interface';
+import Logger from '@/src/middleware/logger';
 const prisma = new PrismaClient();
-const logger = new Logger("logs");
+const logger = new Logger('logs');
 
 /**
  * 사용자에게 새로운 멤버십 알림 생성 함수
@@ -37,15 +33,15 @@ export async function notifyMembershipForStore(token: any) {
 
     // 사용자의 알림 설정 조회
     const userSetting = await prisma.user_setting.findFirst({
-      where: { user_Id: userId },
-      select: { notify: true },
+      where: {user_Id: userId},
+      select: {notify: true},
     });
 
     // 사용자의 알림 설정이 꺼져있으면 처리 중단
-    if (userSetting!.notify === "OFF") {
+    if (userSetting!.notify === 'OFF') {
       return new Response(
-        JSON.stringify({ message: "알림 설정이 꺼져 있습니다." }),
-        { status: 200 }
+        JSON.stringify({message: '알림 설정이 꺼져 있습니다.'}),
+        {status: 200},
       );
     }
 
@@ -57,27 +53,27 @@ export async function notifyMembershipForStore(token: any) {
         user_Id: userId,
         store_deactivate: false,
       },
-      select: { store_Id: true },
+      select: {store_Id: true},
     });
 
     // 구독한 스토어 ID를 배열로 추출하고 null 값 제거
     const storeIds = subscriptions
-      .map((sub) => sub.store_Id)
+      .map(sub => sub.store_Id)
       .filter((id): id is bigint => id !== null);
 
     // 사용자가 구독한 스토어의 새 멤버십을 조회
     const newMemberships = await prisma.membership.findMany({
       where: {
-        store_Id: { in: storeIds },
+        store_Id: {in: storeIds},
         CreateDate: {
           gte: new Date(currentDate.getTime() - 24 * 60 * 60 * 1000),
         },
       },
-      include: { store: true },
+      include: {store: true},
     });
 
     // 생성될 알림을 저장할 배열 초기화
-    let notificationsCreated = [];
+    const notificationsCreated = [];
 
     // 각 새 멤버십에 대해 알림 생성
     for (const membership of newMemberships) {
@@ -87,7 +83,7 @@ export async function notifyMembershipForStore(token: any) {
       const newNotification = await prisma.notification.create({
         data: {
           user_Id: userId,
-          title: "새 멤버십 알림",
+          title: '새 멤버십 알림',
           message: `구독한 스토어 ${membership.store?.name}에서 새 멤버십이 생성되었습니다. 멤버십 정보: ${membershipDetails}`,
           store_Id: membership.store_Id,
         },
@@ -99,20 +95,19 @@ export async function notifyMembershipForStore(token: any) {
     // 생성된 알림이 있는 경우 응답 반환
     if (notificationsCreated.length > 0) {
       return new Response(
-        JSON.stringify({ notifications: notificationsCreated }),
-        { status: 201 }
+        JSON.stringify({notifications: notificationsCreated}),
+        {status: 201},
       );
     } else {
-      return new Response(
-        JSON.stringify({ message: "새 멤버십이 없습니다." }),
-        { status: 200 }
-      );
+      return new Response(JSON.stringify({message: '새 멤버십이 없습니다.'}), {
+        status: 200,
+      });
     }
   } catch (error) {
     if (error instanceof Error) {
       return new Response(
-        JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 }
+        JSON.stringify({error: '내부 서버 오류', message: error.message}),
+        {status: 500},
       );
     }
   }
@@ -146,15 +141,15 @@ export async function notifyMembershipForInfluencer(token: any) {
 
     // 사용자의 알림 설정 조회
     const userSetting = await prisma.user_setting.findFirst({
-      where: { user_Id: userId },
-      select: { notify: true },
+      where: {user_Id: userId},
+      select: {notify: true},
     });
 
     // 알림 설정이 OFF인 경우 알림 발송을 중단하고 응답 반환
-    if (userSetting?.notify === "OFF") {
+    if (userSetting?.notify === 'OFF') {
       return new Response(
-        JSON.stringify({ message: "알림 설정이 꺼져 있습니다." }),
-        { status: 200 }
+        JSON.stringify({message: '알림 설정이 꺼져 있습니다.'}),
+        {status: 200},
       );
     }
 
@@ -167,27 +162,27 @@ export async function notifyMembershipForInfluencer(token: any) {
         user_Id: userId,
         influencer_deactivate: false,
       },
-      select: { influencer_Id: true },
+      select: {influencer_Id: true},
     });
 
     // 구독한 인플루언서의 ID를 배열로 추출
     const influencerIds = subscriptions
-      .map((sub) => sub.influencer_Id)
+      .map(sub => sub.influencer_Id)
       .filter((id): id is bigint => id !== null);
 
     // 사용자가 구독한 인플루언서의 새 멤버십을 조회
     const newMemberships = await prisma.membership.findMany({
       where: {
-        influencer_Id: { in: influencerIds },
+        influencer_Id: {in: influencerIds},
         CreateDate: {
           gte: new Date(currentDate.getTime() - 24 * 60 * 60 * 1000),
         },
       },
-      include: { Influencer: true },
+      include: {Influencer: true},
     });
 
     // 알림을 저장할 배열 초기화
-    let notificationsCreated = [];
+    const notificationsCreated = [];
 
     // 각 새 멤버십에 대한 알림을 생성
     for (const membership of newMemberships) {
@@ -195,7 +190,7 @@ export async function notifyMembershipForInfluencer(token: any) {
       const newNotification = await prisma.notification.create({
         data: {
           user_Id: userId,
-          title: "새 멤버십 알림",
+          title: '새 멤버십 알림',
           message: `구독한 인플루언서 ${membership.influencer_Id}가 새 멤버십을 생성했습니다. 멤버십 정보: ${membershipDetails}`,
           influencer_Id: membership.influencer_Id,
         },
@@ -206,22 +201,21 @@ export async function notifyMembershipForInfluencer(token: any) {
     // 생성된 알림이 있으면 해당 알림을 응답으로 반환
     if (notificationsCreated.length > 0) {
       return new Response(
-        JSON.stringify({ notifications: notificationsCreated }),
-        { status: 201 }
+        JSON.stringify({notifications: notificationsCreated}),
+        {status: 201},
       );
     } else {
       // 새 멤버십이 없는 경우 해당 메시지를 응답으로 반환
-      return new Response(
-        JSON.stringify({ message: "새 멤버십이 없습니다." }),
-        { status: 200 }
-      );
+      return new Response(JSON.stringify({message: '새 멤버십이 없습니다.'}), {
+        status: 200,
+      });
     }
   } catch (error) {
     // 오류 처리: 오류 발생 시 오류 메시지와 함께 500 상태 코드 반환
     if (error instanceof Error) {
       return new Response(
-        JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 }
+        JSON.stringify({error: '내부 서버 오류', message: error.message}),
+        {status: 500},
       );
     }
   }
@@ -259,7 +253,7 @@ export async function notifyForNotices(token: Token) {
     // 최근 24시간 이내에 생성된 공개된 공지사항 조회
     const newNotices = await prisma.notices.findMany({
       where: {
-        status: "PUBLIC",
+        status: 'PUBLIC',
         CreateDate: {
           gte: new Date(currentDate.getTime() - 24 * 60 * 60 * 1000),
         },
@@ -267,7 +261,7 @@ export async function notifyForNotices(token: Token) {
     });
 
     // 생성된 알림을 저장할 배열 초기화
-    let notificationsCreated = [];
+    const notificationsCreated = [];
 
     // 각 새 공지사항에 대해 알림 생성
     for (const notice of newNotices) {
@@ -275,27 +269,27 @@ export async function notifyForNotices(token: Token) {
       const newNotification = await prisma.notification.create({
         data: {
           user_Id: userId, // 알림을 받을 사용자 ID
-          title: "공지사항", // 알림 제목
-          message: "새로운 공지 사항이 있어요", // 알림 메시지
+          title: '공지사항', // 알림 제목
+          message: '새로운 공지 사항이 있어요', // 알림 메시지
         },
       });
 
       // 생성된 알림을 배열에 추가
-      notificationsCreated.push(newNotification);
+      const notificationsCreated: NotificationType[] = [];
     }
 
     // 생성된 알림이 있는 경우 응답 반환
     if (notificationsCreated.length > 0) {
       // 생성된 알림 목록을 포함한 응답 반환
       return new Response(
-        JSON.stringify({ notifications: notificationsCreated }),
-        { status: 201 }
+        JSON.stringify({notifications: notificationsCreated}),
+        {status: 201},
       );
     } else {
       // 새 공지사항이 없는 경우 메시지를 포함한 응답 반환
       return new Response(
-        JSON.stringify({ message: "새 공지사항이 없습니다." }),
-        { status: 200 }
+        JSON.stringify({message: '새 공지사항이 없습니다.'}),
+        {status: 200},
       );
     }
   } catch (error) {
@@ -303,8 +297,8 @@ export async function notifyForNotices(token: Token) {
     if (error instanceof Error) {
       // 오류 메시지와 함께 500 상태 코드 반환
       return new Response(
-        JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 }
+        JSON.stringify({error: '내부 서버 오류', message: error.message}),
+        {status: 500},
       );
     }
   }

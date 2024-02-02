@@ -1,13 +1,13 @@
-import prisma from "../lib/prisma"; // 프리즈마 클라이언트 임포트
-import Logger from "@/src/middleware/logger";
+import prisma from '../lib/prisma'; // 프리즈마 클라이언트 임포트
+import Logger from '@/src/middleware/logger';
 import {
   CreateLikeNoticeData,
   CreateLikeInfluencerData,
   CreateLikeStoreData,
   CreateLikeMembershipData,
-} from "@/types/interface/like_Interface";
-import { Token } from "@/types/interface/Token_Interface";
-const logger = new Logger("logs");
+} from '@/types/interface/like_Interface';
+import {Token} from '@/types/interface/Token_Interface';
+const logger = new Logger('logs');
 // 좋아요(Like) 관련 API
 
 /**
@@ -31,22 +31,22 @@ const logger = new Logger("logs");
 
 export async function createLikeNotice(
   req: CreateLikeNoticeData,
-  token: Token
+  token: Token,
 ) {
   try {
     // 공지사항 존재 여부 확인
     // console.log("token inService:", token);
     const noticeExists = await prisma.notices.findUnique({
-      where: { id: req.notice_id },
+      where: {id: req.notice_id},
     });
 
     if (!noticeExists) {
       logger.error(
-        `ID ${req.notice_id}에 해당하는 공지사항을 찾을 수 없습니다.`
+        `ID ${req.notice_id}에 해당하는 공지사항을 찾을 수 없습니다.`,
       );
       return new Response(
-        JSON.stringify({ error: "해당 공지사항을 찾을 수 없습니다." }),
-        { status: 404 } // Not Found
+        JSON.stringify({error: '해당 공지사항을 찾을 수 없습니다.'}),
+        {status: 404}, // Not Found
       );
     }
 
@@ -61,7 +61,7 @@ export async function createLikeNotice(
     if (existingLike) {
       // 이미 좋아요가 있다면 삭제 및 disabled 설정
       await prisma.like.update({
-        where: { id: existingLike.id },
+        where: {id: existingLike.id},
         data: {
           notice_id: null,
           disabled: true,
@@ -69,8 +69,8 @@ export async function createLikeNotice(
       });
       logger.info(`ID ${req.notice_id}에 대한 좋아요가 제거되었습니다.`);
       return new Response(
-        JSON.stringify({ message: "좋아요가 제거되었습니다.", disabled: true }),
-        { status: 200 } // OK
+        JSON.stringify({message: '좋아요가 제거되었습니다.', disabled: true}),
+        {status: 200}, // OK
       );
     } else {
       // 좋아요 생성 및 disabled 해제
@@ -89,14 +89,14 @@ export async function createLikeNotice(
       };
 
       logger.info(`${req.notice_id} 좋아요 생성 성공`);
-      return new Response(JSON.stringify(serializedLike), { status: 201 }); // Created
+      return new Response(JSON.stringify(serializedLike), {status: 201}); // Created
     }
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("좋아요 처리 중 오류 발생: " + error.message);
+      logger.error('좋아요 처리 중 오류 발생: ' + error.message);
       return new Response(
-        JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        JSON.stringify({error: '내부 서버 오류', message: error.message}),
+        {status: 500}, // Internal Server Error
       );
     }
   }
@@ -124,21 +124,21 @@ export async function getLikeListForNotice(token: Token) {
   try {
     // 사용자가 좋아요를 누른 공지사항 목록 조회
     const likeListForNotice = await prisma.like.findMany({
-      where: { user_id: token.id, notice_id: { not: null } },
+      where: {user_id: token.id, notice_id: {not: null}},
     });
 
     if (likeListForNotice.length === 0) {
-      logger.info("좋아요를 누른 공지사항이 없습니다.");
+      logger.info('좋아요를 누른 공지사항이 없습니다.');
       return new Response(
         JSON.stringify({
           success: true,
-          message: "좋아요를 누른 공지사항이 없습니다.",
+          message: '좋아요를 누른 공지사항이 없습니다.',
         }),
-        { status: 200 } // OK
+        {status: 200}, // OK
       );
     } else {
       // 공지사항 ID를 포함한 리스트 생성
-      const serializedLikeList = likeListForNotice.map((like) => ({
+      const serializedLikeList = likeListForNotice.map(like => ({
         notice_id: like.notice_id ? like.notice_id.toString() : null,
       }));
       // const filteredLikeList = likeListForNotice.filter(
@@ -148,22 +148,22 @@ export async function getLikeListForNotice(token: Token) {
       return new Response(
         JSON.stringify({
           success: true,
-          message: "좋아요 목록 조회 성공",
+          message: '좋아요 목록 조회 성공',
           data: serializedLikeList,
         }),
-        { status: 200 }
+        {status: 200},
       ); // OK
     }
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("좋아요 리스트 처리 중 오류 발생: " + error.message);
+      logger.error('좋아요 리스트 처리 중 오류 발생: ' + error.message);
       return new Response(
         JSON.stringify({
           success: false,
-          error: "내부 서버 오류",
+          error: '내부 서버 오류',
           message: error.message,
         }),
-        { status: 500 } // Internal Server Error
+        {status: 500}, // Internal Server Error
       );
     }
   }
@@ -194,21 +194,21 @@ export async function getLikeListForNotice(token: Token) {
 
 export async function createLikeInfluencer(
   req: CreateLikeInfluencerData,
-  token: Token
+  token: Token,
 ) {
   try {
     // 인플루언서 존재 여부 확인
     const influencerExists = await prisma.influencer.findUnique({
-      where: { id: req.influencer_id },
+      where: {id: req.influencer_id},
     });
 
     if (!influencerExists) {
       logger.error(
-        `ID ${req.influencer_id}에 해당하는 인플루언서를 찾을 수 없습니다.`
+        `ID ${req.influencer_id}에 해당하는 인플루언서를 찾을 수 없습니다.`,
       );
       return new Response(
-        JSON.stringify({ error: "해당 인플루언서를 찾을 수 없습니다." }),
-        { status: 404 } // Not Found
+        JSON.stringify({error: '해당 인플루언서를 찾을 수 없습니다.'}),
+        {status: 404}, // Not Found
       );
     }
 
@@ -223,7 +223,7 @@ export async function createLikeInfluencer(
     if (existingLike) {
       // 이미 좋아요가 있다면 삭제
       await prisma.like.update({
-        where: { id: existingLike.id },
+        where: {id: existingLike.id},
         data: {
           influencer_id: null,
           disabled: true,
@@ -231,8 +231,8 @@ export async function createLikeInfluencer(
       }),
         logger.info(`ID ${req.influencer_id}에 대한 좋아요가 제거되었습니다.`);
       return new Response(
-        JSON.stringify({ message: "좋아요가 제거되었습니다.", disabled: true }),
-        { status: 200 } // OK
+        JSON.stringify({message: '좋아요가 제거되었습니다.', disabled: true}),
+        {status: 200}, // OK
       );
     } else {
       // 좋아요 생성
@@ -251,14 +251,14 @@ export async function createLikeInfluencer(
       };
 
       logger.info(`ID ${req.influencer_id} 좋아요 생성 성공`);
-      return new Response(JSON.stringify(serializedLike), { status: 201 }); // Created
+      return new Response(JSON.stringify(serializedLike), {status: 201}); // Created
     }
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("좋아요 처리 중 오류 발생: " + error.message);
+      logger.error('좋아요 처리 중 오류 발생: ' + error.message);
       return new Response(
-        JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        JSON.stringify({error: '내부 서버 오류', message: error.message}),
+        {status: 500}, // Internal Server Error
       );
     }
   }
@@ -286,21 +286,21 @@ export async function getLikeListForInfluencer(token: Token) {
   try {
     // 사용자가 좋아요를 누른 인플루언서 목록 조회
     const likeListForInfluencer = await prisma.like.findMany({
-      where: { user_id: token.id, influencer_id: { not: null } },
+      where: {user_id: token.id, influencer_id: {not: null}},
     });
 
     if (likeListForInfluencer.length === 0) {
-      logger.info("좋아요를 누른 인플루언서가 없습니다.");
+      logger.info('좋아요를 누른 인플루언서가 없습니다.');
       return new Response(
         JSON.stringify({
           success: true,
-          message: "좋아요를 누른 인플루언서가 없습니다.",
+          message: '좋아요를 누른 인플루언서가 없습니다.',
         }),
-        { status: 200 } // OK
+        {status: 200}, // OK
       );
     } else {
       // 인플루언서 ID를 포함한 리스트 생성
-      const serializedLikeList = likeListForInfluencer.map((like) => ({
+      const serializedLikeList = likeListForInfluencer.map(like => ({
         influencer_id: like.influencer_id
           ? like.influencer_id.toString()
           : null,
@@ -310,22 +310,22 @@ export async function getLikeListForInfluencer(token: Token) {
       return new Response(
         JSON.stringify({
           success: true,
-          message: "좋아요 목록 조회 성공",
+          message: '좋아요 목록 조회 성공',
           data: serializedLikeList,
         }),
-        { status: 200 }
+        {status: 200},
       ); // OK
     }
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("좋아요 리스트 처리 중 오류 발생: " + error.message);
+      logger.error('좋아요 리스트 처리 중 오류 발생: ' + error.message);
       return new Response(
         JSON.stringify({
           success: false,
-          error: "내부 서버 오류",
+          error: '내부 서버 오류',
           message: error.message,
         }),
-        { status: 500 } // Internal Server Error
+        {status: 500}, // Internal Server Error
       );
     }
   }
@@ -356,14 +356,14 @@ export async function createLikeStore(req: CreateLikeStoreData, token: Token) {
   try {
     // 상점 존재 여부 확인
     const storeExists = await prisma.store.findUnique({
-      where: { id: req.store_id },
+      where: {id: req.store_id},
     });
 
     if (!storeExists) {
       logger.error(`ID ${req.store_id}에 해당하는 상점을 찾을 수 없습니다.`);
       return new Response(
-        JSON.stringify({ error: "해당 상점을 찾을 수 없습니다." }),
-        { status: 404 } // Not Found
+        JSON.stringify({error: '해당 상점을 찾을 수 없습니다.'}),
+        {status: 404}, // Not Found
       );
     }
 
@@ -378,7 +378,7 @@ export async function createLikeStore(req: CreateLikeStoreData, token: Token) {
     if (existingLike) {
       // 이미 좋아요가 있다면 삭제
       await prisma.like.update({
-        where: { id: existingLike.id },
+        where: {id: existingLike.id},
         data: {
           store_id: null,
           disabled: true,
@@ -386,8 +386,8 @@ export async function createLikeStore(req: CreateLikeStoreData, token: Token) {
       });
       logger.info(`ID ${req.store_id}에 대한 좋아요가 제거되었습니다.`);
       return new Response(
-        JSON.stringify({ message: "좋아요가 제거되었습니다.", disabled: true }),
-        { status: 200 } // OK
+        JSON.stringify({message: '좋아요가 제거되었습니다.', disabled: true}),
+        {status: 200}, // OK
       );
     } else {
       // 좋아요 생성
@@ -406,14 +406,14 @@ export async function createLikeStore(req: CreateLikeStoreData, token: Token) {
       };
 
       logger.info(`ID ${req.store_id} 좋아요 생성 성공`);
-      return new Response(JSON.stringify(serializedLike), { status: 201 }); // Created
+      return new Response(JSON.stringify(serializedLike), {status: 201}); // Created
     }
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("좋아요 처리 중 오류 발생: " + error.message);
+      logger.error('좋아요 처리 중 오류 발생: ' + error.message);
       return new Response(
-        JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        JSON.stringify({error: '내부 서버 오류', message: error.message}),
+        {status: 500}, // Internal Server Error
       );
     }
   }
@@ -441,22 +441,22 @@ export async function getLikeListForStore(token: Token) {
   try {
     // 사용자가 좋아요를 누른 가계 목록 조회
     const getLikeListForStore = await prisma.like.findMany({
-      where: { user_id: token.id, store_id: { not: null } },
+      where: {user_id: token.id, store_id: {not: null}},
     });
     // console.log("getLikeListForStore :", getLikeListForStore);
     if (getLikeListForStore.length === 0) {
-      logger.info("좋아요를 누른 가게가 없습니다.");
+      logger.info('좋아요를 누른 가게가 없습니다.');
       return new Response(
         JSON.stringify({
           success: true,
-          message: "좋아요를 누른 가게가 없습니다.",
+          message: '좋아요를 누른 가게가 없습니다.',
         }),
-        { status: 200 } // OK
+        {status: 200}, // OK
       );
     } else {
-      console.log("getLikeListForStore :", getLikeListForStore);
+      console.log('getLikeListForStore :', getLikeListForStore);
       // 가게 ID를 포함한 리스트 생성
-      const serializedLikeList = getLikeListForStore.map((like) => ({
+      const serializedLikeList = getLikeListForStore.map(like => ({
         store_id: like.store_id ? like.store_id.toString() : null,
       }));
 
@@ -464,22 +464,22 @@ export async function getLikeListForStore(token: Token) {
       return new Response(
         JSON.stringify({
           success: true,
-          message: "좋아요 목록 조회 성공",
+          message: '좋아요 목록 조회 성공',
           data: serializedLikeList,
         }),
-        { status: 200 }
+        {status: 200},
       ); // OK
     }
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("좋아요 리스트 처리 중 오류 발생: " + error.message);
+      logger.error('좋아요 리스트 처리 중 오류 발생: ' + error.message);
       return new Response(
         JSON.stringify({
           success: false,
-          error: "내부 서버 오류",
+          error: '내부 서버 오류',
           message: error.message,
         }),
-        { status: 500 } // Internal Server Error
+        {status: 500}, // Internal Server Error
       );
     }
   }
@@ -507,22 +507,22 @@ export async function getLikeListForStore(token: Token) {
 
 export async function CreateLikeMembership(
   req: CreateLikeMembershipData,
-  token: Token
+  token: Token,
 ) {
   try {
     // 맴버쉽 존재 여부 확인
     // console.log("token inService:", token);
     const membershipExists = await prisma.membership.findUnique({
-      where: { Id: req.membership_id },
+      where: {Id: req.membership_id},
     });
 
     if (!membershipExists) {
       logger.error(
-        `ID ${req.membership_id}에 해당하는 맴버쉽을 찾을 수 없습니다.`
+        `ID ${req.membership_id}에 해당하는 맴버쉽을 찾을 수 없습니다.`,
       );
       return new Response(
-        JSON.stringify({ error: "해당 맴버쉽을 찾을 수 없습니다." }),
-        { status: 404 } // Not Found
+        JSON.stringify({error: '해당 맴버쉽을 찾을 수 없습니다.'}),
+        {status: 404}, // Not Found
       );
     }
 
@@ -537,7 +537,7 @@ export async function CreateLikeMembership(
     if (existingLike) {
       // 이미 좋아요가 있다면 삭제 및 disabled 설정
       await prisma.like.update({
-        where: { id: existingLike.id },
+        where: {id: existingLike.id},
         data: {
           membership_id: null,
           disabled: true,
@@ -545,8 +545,8 @@ export async function CreateLikeMembership(
       });
       logger.info(`ID ${req.membership_id}에 대한 좋아요가 제거되었습니다.`);
       return new Response(
-        JSON.stringify({ message: "좋아요가 제거되었습니다.", disabled: true }),
-        { status: 200 } // OK
+        JSON.stringify({message: '좋아요가 제거되었습니다.', disabled: true}),
+        {status: 200}, // OK
       );
     } else {
       // 좋아요 생성 및 disabled 해제
@@ -565,14 +565,14 @@ export async function CreateLikeMembership(
       };
 
       logger.info(`${req.membership_id} 좋아요 생성 성공`);
-      return new Response(JSON.stringify(serializedLike), { status: 201 }); // Created
+      return new Response(JSON.stringify(serializedLike), {status: 201}); // Created
     }
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("좋아요 처리 중 오류 발생: " + error.message);
+      logger.error('좋아요 처리 중 오류 발생: ' + error.message);
       return new Response(
-        JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        JSON.stringify({error: '내부 서버 오류', message: error.message}),
+        {status: 500}, // Internal Server Error
       );
     }
   }
@@ -599,21 +599,21 @@ export async function getLikeListForMembership(token: Token) {
   try {
     // 사용자가 좋아요를 누른 맴버쉽 목록 조회
     const likeListForMembership = await prisma.like.findMany({
-      where: { user_id: token.id, membership_id: { not: null } },
+      where: {user_id: token.id, membership_id: {not: null}},
     });
 
     if (likeListForMembership.length === 0) {
-      logger.info("좋아요를 누른 맴버쉽이 없습니다.");
+      logger.info('좋아요를 누른 맴버쉽이 없습니다.');
       return new Response(
         JSON.stringify({
           success: true,
-          message: "좋아요를 누른 맴버쉽이 없습니다.",
+          message: '좋아요를 누른 맴버쉽이 없습니다.',
         }),
-        { status: 200 } // OK
+        {status: 200}, // OK
       );
     } else {
       // 맴버쉽 ID를 포함한 리스트 생성
-      const serializedLikeList = likeListForMembership.map((like) => ({
+      const serializedLikeList = likeListForMembership.map(like => ({
         membership_id: like.membership_id
           ? like.membership_id.toString()
           : null,
@@ -625,22 +625,22 @@ export async function getLikeListForMembership(token: Token) {
       return new Response(
         JSON.stringify({
           success: true,
-          message: "좋아요 목록 조회 성공",
+          message: '좋아요 목록 조회 성공',
           data: serializedLikeList,
         }),
-        { status: 200 }
+        {status: 200},
       ); // OK
     }
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("좋아요 리스트 처리 중 오류 발생: " + error.message);
+      logger.error('좋아요 리스트 처리 중 오류 발생: ' + error.message);
       return new Response(
         JSON.stringify({
           success: false,
-          error: "내부 서버 오류",
+          error: '내부 서버 오류',
           message: error.message,
         }),
-        { status: 500 } // Internal Server Error
+        {status: 500}, // Internal Server Error
       );
     }
   }

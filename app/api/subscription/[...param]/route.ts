@@ -1,43 +1,36 @@
-import Logger from "@/src/middleware/logger";
-import * as Subscription_Service from "@/src/_services/subscriptionService";
-import {
-  SubStoreRequest,
-  SubInfluencerRequest,
-  SubMembershipRequest,
-} from "@/types/interface/subscription_Interface";
-import { Token } from "@/types/interface/Token_Interface";
-import { verifyJwt } from "@/src/lib/jwt";
+import Logger from '@/src/middleware/logger';
+import * as Subscription_Service from '@/src/_services/subscriptionService';
+import {Token} from '@/types/interface/Token_Interface';
+import {verifyJwt} from '@/src/lib/jwt';
 
 const handler = async (req: any, context: any) => {
-  console.log("context :", context);
-  const { params } = context;
+  console.log('context :', context);
+  const {params} = context;
   const method = req.method;
-  const param1 = params.param[0] as String;
-  const param2 = params.param[1] as Number;
-  const accessToken = req.headers.get("authorization");
-  const logger = new Logger("logs");
+  const param1 = params.param[0] as string;
+  const accessToken = req.headers.get('authorization');
+  const logger = new Logger('logs');
 
   logger.info(`Subscription API 요청: Method=${method}, Params=${param1}`);
   switch (method) {
-    case "POST":
+    case 'POST':
       try {
         // "Influencer" 파라미터로 들어온 경우
-        if (param1 === "Influencer") {
+        if (param1 === 'Influencer') {
           // 인증 토큰 검증
           if (!accessToken) {
-            logger.error("인증 토큰 누락");
-            return new Response(JSON.stringify({ error: "인증 없음" }), {
+            logger.error('인증 토큰 누락');
+            return new Response(JSON.stringify({error: '인증 없음'}), {
               status: 401,
             });
           }
 
           const jwtPayload = verifyJwt(accessToken);
           if (!jwtPayload || !jwtPayload.id) {
-            logger.error("인증 토큰 검증 실패");
-            return new Response(
-              JSON.stringify({ error: "유효하지 않은 토큰" }),
-              { status: 401 }
-            );
+            logger.error('인증 토큰 검증 실패');
+            return new Response(JSON.stringify({error: '유효하지 않은 토큰'}), {
+              status: 401,
+            });
           }
 
           const token: Token = {
@@ -54,62 +47,61 @@ const handler = async (req: any, context: any) => {
           // 인플루언서 구독 서비스 호출
           const response = await Subscription_Service.subInfluencer(
             body,
-            token
+            token,
           );
           const subInfluencerResult = await response!.json();
 
           if (!subInfluencerResult) {
             // 구독 실패 또는 오류 발생
-            logger.error("구독 실패");
+            logger.error('구독 실패');
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "구독 실패",
+                message: '구독 실패',
                 error: subInfluencerResult.error,
               }),
-              { status: subInfluencerResult.status || 500 }
+              {status: subInfluencerResult.status || 500},
             );
           } else if (subInfluencerResult.alreadySubscribed) {
             // 이미 구독 중인 경우
-            logger.info("이미 구독 중, 구독 취소 처리");
+            logger.info('이미 구독 중, 구독 취소 처리');
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "구독 취소 처리됨",
+                message: '구독 취소 처리됨',
                 data: subInfluencerResult,
               }),
-              { status: 200 }
+              {status: 200},
             );
           } else {
             // 새로운 구독 생성 성공
-            logger.info("구독 생성 성공");
+            logger.info('구독 생성 성공');
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "구독 생성 성공",
+                message: '구독 생성 성공',
                 data: subInfluencerResult,
               }),
-              { status: 201 }
+              {status: 201},
             );
           }
         }
         // "Store" 파라미터로 들어온 경우
-        if (param1 === "Store") {
+        if (param1 === 'Store') {
           // 인증 토큰 검증
           if (!accessToken) {
-            logger.error("인증 토큰 누락");
-            return new Response(JSON.stringify({ error: "인증 없음" }), {
+            logger.error('인증 토큰 누락');
+            return new Response(JSON.stringify({error: '인증 없음'}), {
               status: 401,
             });
           }
 
           const jwtPayload = verifyJwt(accessToken);
           if (!jwtPayload || !jwtPayload.id) {
-            logger.error("인증 토큰 검증 실패");
-            return new Response(
-              JSON.stringify({ error: "유효하지 않은 토큰" }),
-              { status: 401 }
-            );
+            logger.error('인증 토큰 검증 실패');
+            return new Response(JSON.stringify({error: '유효하지 않은 토큰'}), {
+              status: 401,
+            });
           }
 
           const token: Token = {
@@ -129,36 +121,36 @@ const handler = async (req: any, context: any) => {
 
           if (!subStoreResult) {
             // 구독 실패 또는 오류 발생
-            logger.error("구독 실패");
+            logger.error('구독 실패');
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "구독 실패",
+                message: '구독 실패',
                 error: subStoreResult.error,
               }),
-              { status: subStoreResult.status || 500 }
+              {status: subStoreResult.status || 500},
             );
           } else if (subStoreResult.alreadySubscribed) {
             // 이미 구독 중인 경우
-            logger.info("이미 구독 중, 구독 취소 처리");
+            logger.info('이미 구독 중, 구독 취소 처리');
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "구독 취소 처리됨",
+                message: '구독 취소 처리됨',
                 data: subStoreResult,
               }),
-              { status: 200 }
+              {status: 200},
             );
           } else {
             // 새로운 구독 생성 성공
-            logger.info("구독 생성 성공");
+            logger.info('구독 생성 성공');
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "구독 생성 성공",
+                message: '구독 생성 성공',
                 data: subStoreResult,
               }),
-              { status: 201 }
+              {status: 201},
             );
           }
         }
@@ -170,31 +162,28 @@ const handler = async (req: any, context: any) => {
 
           // 500 (Internal Server Error) 상태 코드 반환
           return new Response(
-            JSON.stringify({ error: "Internal server error" }),
-            { status: 500 }
+            JSON.stringify({error: 'Internal server error'}),
+            {status: 500},
           );
         }
       }
-    case "GET":
+    case 'GET':
       try {
-        if (param1 === "findAll") {
+        if (param1 === 'findAll') {
           // 인증 토큰 검증
           if (!accessToken) {
-            logger.error("인증 토큰 누락");
-            return new Response(JSON.stringify({ error: "인증 없음" }), {
+            logger.error('인증 토큰 누락');
+            return new Response(JSON.stringify({error: '인증 없음'}), {
               status: 401,
             });
           }
 
           const jwtPayload = verifyJwt(accessToken);
           if (!jwtPayload || !jwtPayload.id) {
-            logger.error("인증 토큰 검증 실패");
-            return new Response(
-              JSON.stringify({ error: "유효하지 않은 토큰" }),
-              {
-                status: 401,
-              }
-            );
+            logger.error('인증 토큰 검증 실패');
+            return new Response(JSON.stringify({error: '유효하지 않은 토큰'}), {
+              status: 401,
+            });
           }
 
           const token: Token = {
@@ -206,9 +195,8 @@ const handler = async (req: any, context: any) => {
           };
 
           // 스토어 구독 목록 서비스 호출
-          const response = await Subscription_Service.getSubscriptionList(
-            token
-          );
+          const response =
+            await Subscription_Service.getSubscriptionList(token);
           const findAll = await response!.json();
 
           if (!findAll) {
@@ -216,41 +204,38 @@ const handler = async (req: any, context: any) => {
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "구독한 스토어나 인플루언서가 없습니다.",
+                message: '구독한 스토어나 인플루언서가 없습니다.',
               }),
-              { status: 200 }
+              {status: 200},
             );
           } else {
             // 구독 목록이 있는 경우
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "구독 목록 조회 성공",
+                message: '구독 목록 조회 성공',
                 data: findAll,
               }),
-              { status: 200 }
+              {status: 200},
             );
           }
         }
 
-        if (param1 === "findListForInf") {
+        if (param1 === 'findListForInf') {
           // 인증 토큰 검증
           if (!accessToken) {
-            logger.error("인증 토큰 누락");
-            return new Response(JSON.stringify({ error: "인증 없음" }), {
+            logger.error('인증 토큰 누락');
+            return new Response(JSON.stringify({error: '인증 없음'}), {
               status: 401,
             });
           }
 
           const jwtPayload = verifyJwt(accessToken);
           if (!jwtPayload || !jwtPayload.id) {
-            logger.error("인증 토큰 검증 실패");
-            return new Response(
-              JSON.stringify({ error: "유효하지 않은 토큰" }),
-              {
-                status: 401,
-              }
-            );
+            logger.error('인증 토큰 검증 실패');
+            return new Response(JSON.stringify({error: '유효하지 않은 토큰'}), {
+              status: 401,
+            });
           }
 
           const token: Token = {
@@ -262,9 +247,8 @@ const handler = async (req: any, context: any) => {
           };
 
           // 인플루언서 구독 목록 서비스 호출
-          const response = await Subscription_Service.getSubListForInfluencer(
-            token
-          );
+          const response =
+            await Subscription_Service.getSubListForInfluencer(token);
           const data = await response!.json();
 
           if (!data) {
@@ -272,39 +256,38 @@ const handler = async (req: any, context: any) => {
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "구독한 인플루언서가 없습니다.",
+                message: '구독한 인플루언서가 없습니다.',
               }),
-              { status: 204 }
+              {status: 204},
             );
           } else {
             // 구독 목록이 있는 경우
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "구독 목록 조회 성공",
+                message: '구독 목록 조회 성공',
                 data: data,
               }),
-              { status: 200 }
+              {status: 200},
             );
           }
         }
 
-        if (param1 === "findListForStore") {
+        if (param1 === 'findListForStore') {
           // 인증 토큰 검증
           if (!accessToken) {
-            logger.error("인증 토큰 누락");
-            return new Response(JSON.stringify({ error: "인증 없음" }), {
+            logger.error('인증 토큰 누락');
+            return new Response(JSON.stringify({error: '인증 없음'}), {
               status: 401,
             });
           }
 
           const jwtPayload = verifyJwt(accessToken);
           if (!jwtPayload || !jwtPayload.id) {
-            logger.error("인증 토큰 검증 실패");
-            return new Response(
-              JSON.stringify({ error: "유효하지 않은 토큰" }),
-              { status: 401 }
-            );
+            logger.error('인증 토큰 검증 실패');
+            return new Response(JSON.stringify({error: '유효하지 않은 토큰'}), {
+              status: 401,
+            });
           }
 
           const token: Token = {
@@ -318,12 +301,12 @@ const handler = async (req: any, context: any) => {
           const response = await Subscription_Service.getSubListForStore(token);
 
           if (!response || !response.ok) {
-            logger.error("서비스 응답 없음 또는 오류 발생");
+            logger.error('서비스 응답 없음 또는 오류 발생');
             return new Response(
-              JSON.stringify({ error: "Service unavailable" }),
+              JSON.stringify({error: 'Service unavailable'}),
               {
                 status: 503,
-              }
+              },
             );
           }
           const findAll = await response.json();
@@ -333,19 +316,19 @@ const handler = async (req: any, context: any) => {
             return new Response(
               JSON.stringify({
                 success: false,
-                message: "No content",
+                message: 'No content',
               }),
-              { status: 204 }
+              {status: 204},
             );
           } else {
             // 조회된 데이터가 있는 경우
             return new Response(
               JSON.stringify({
                 success: true,
-                message: "findAll successful",
+                message: 'findAll successful',
                 data: findAll,
               }),
-              { status: 201 }
+              {status: 201},
             );
           }
         }
@@ -356,22 +339,22 @@ const handler = async (req: any, context: any) => {
 
           // 500 (Internal Server Error) 상태 코드 반환
           return new Response(
-            JSON.stringify({ error: "Internal server error" }),
-            { status: 500 }
+            JSON.stringify({error: 'Internal server error'}),
+            {status: 500},
           );
         }
       }
       break;
 
     default:
-      console.log("지원되지 않는 메서드:", method);
-      return new Response(JSON.stringify({ error: "지원되지 않는 메서드" }), {
+      console.log('지원되지 않는 메서드:', method);
+      return new Response(JSON.stringify({error: '지원되지 않는 메서드'}), {
         status: 405,
       });
   }
 };
 
-export { handler as GET, handler as POST };
+export {handler as GET, handler as POST};
 
 /************************************************************************************************************/
 

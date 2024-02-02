@@ -1,14 +1,11 @@
-import { Influencer } from "./../../node_modules/.prisma/client/index.d";
-import prisma from "@/src/lib/prisma";
-import Logger from "@/src/middleware/logger";
+import prisma from '@/src/lib/prisma';
+import Logger from '@/src/middleware/logger';
 import {
-  SubInfluencers,
   SubInfluencerRequest,
   SubStores,
-  SubMemberships,
-} from "@/types/interface/subscription_Interface";
-import { Token } from "@/types/interface/Token_Interface";
-const logger = new Logger("logs");
+} from '@/types/interface/subscription_Interface';
+import {Token} from '@/types/interface/Token_Interface';
+const logger = new Logger('logs');
 // 구독(subscription) 관련 API
 
 /**
@@ -41,15 +38,15 @@ export async function subInfluencer(req: SubInfluencerRequest, token: Token) {
     if (existingSubscription) {
       // 이미 존재하는 구독이면 구독 취소 처리
       await prisma.subscription.delete({
-        where: { id: existingSubscription.id },
+        where: {id: existingSubscription.id},
       });
 
       logger.info(
-        `구독 취소: 사용자 ID ${token.id}, 인플루언서 ID ${req.influencer_Id}`
+        `구독 취소: 사용자 ID ${token.id}, 인플루언서 ID ${req.influencer_Id}`,
       );
       return new Response(
-        JSON.stringify({ message: "구독이 취소되었습니다." }),
-        { status: 200 } // OK
+        JSON.stringify({message: '구독이 취소되었습니다.'}),
+        {status: 200}, // OK
       );
     } else {
       // 새 구독 생성
@@ -72,8 +69,8 @@ export async function subInfluencer(req: SubInfluencerRequest, token: Token) {
     }
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("구독 처리 중 오류 발생: " + error.message);
-      return new Response(JSON.stringify({ error: "내부 서버 오류" }), {
+      logger.error('구독 처리 중 오류 발생: ' + error.message);
+      return new Response(JSON.stringify({error: '내부 서버 오류'}), {
         status: 500, // Internal Server Error
       });
     }
@@ -111,15 +108,15 @@ export async function subStore(req: SubStores, token: Token) {
     if (existingSubscription) {
       // 이미 존재하는 구독이면 구독 취소 처리
       await prisma.subscription.delete({
-        where: { id: existingSubscription.id },
+        where: {id: existingSubscription.id},
       });
 
       logger.info(
-        `구독 취소: 사용자 ID ${token.id}, 스토어 ID ${req.store_Id}`
+        `구독 취소: 사용자 ID ${token.id}, 스토어 ID ${req.store_Id}`,
       );
       return new Response(
-        JSON.stringify({ message: "구독이 취소되었습니다." }),
-        { status: 200 } // OK
+        JSON.stringify({message: '구독이 취소되었습니다.'}),
+        {status: 200}, // OK
       );
     } else {
       // 새 구독 생성
@@ -142,8 +139,8 @@ export async function subStore(req: SubStores, token: Token) {
     }
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("구독 처리 중 오류 발생: " + error.message);
-      return new Response(JSON.stringify({ error: "내부 서버 오류" }), {
+      logger.error('구독 처리 중 오류 발생: ' + error.message);
+      return new Response(JSON.stringify({error: '내부 서버 오류'}), {
         status: 500, // Internal Server Error
       });
     }
@@ -172,34 +169,34 @@ export async function getSubListForInfluencer(token: Token) {
   try {
     // 사용자가 구독한 인플루언서 목록 조회
     const subListForInfluencer = await prisma.subscription.findMany({
-      where: { user_Id: token.id, influencer_Id: { not: null } },
+      where: {user_Id: token.id, influencer_Id: {not: null}},
     });
 
     if (subListForInfluencer.length === 0) {
-      logger.info("구독한 인플루언서가 없습니다.");
+      logger.info('구독한 인플루언서가 없습니다.');
       return new Response(
-        JSON.stringify({ message: "구독한 인플루언서가 없습니다." }),
-        { status: 204 } // No Content
+        JSON.stringify({message: '구독한 인플루언서가 없습니다.'}),
+        {status: 204}, // No Content
       );
     }
 
     // 인플루언서 ID를 포함한 리스트 생성
-    const serializedSubList = subListForInfluencer.map((subscription) => ({
+    const serializedSubList = subListForInfluencer.map(subscription => ({
       influencer_Id: subscription.influencer_Id
         ? subscription.influencer_Id.toString()
         : null,
     }));
 
     logger.info(`사용자 ID ${token.id}의 구독 리스트 생성 성공`);
-    return new Response(JSON.stringify(serializedSubList), { status: 200 }); // OK
+    return new Response(JSON.stringify(serializedSubList), {status: 200}); // OK
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("구독 리스트 처리 중 오류 발생: " + error.message);
+      logger.error('구독 리스트 처리 중 오류 발생: ' + error.message);
       return new Response(
-        JSON.stringify({ error: "내부 서버 오류", message: error.message }),
+        JSON.stringify({error: '내부 서버 오류', message: error.message}),
         {
           status: 500, // Internal Server Error
-        }
+        },
       );
     }
   }
@@ -227,32 +224,32 @@ export async function getSubListForStore(token: Token) {
   try {
     // 사용자가 구독한 스토어 목록 조회
     const subListForStore = await prisma.subscription.findMany({
-      where: { user_Id: token.id, store_Id: { not: null } },
+      where: {user_Id: token.id, store_Id: {not: null}},
     });
 
     if (subListForStore.length === 0) {
-      logger.info("구독한 스토어가 없습니다.");
+      logger.info('구독한 스토어가 없습니다.');
       return new Response(
-        JSON.stringify({ message: "구독한 스토어가 없습니다." }),
-        { status: 204 } // No Content
+        JSON.stringify({message: '구독한 스토어가 없습니다.'}),
+        {status: 204}, // No Content
       );
     }
 
     // 스토어 ID를 포함한 리스트 생성
-    const serializedSubList = subListForStore.map((subscription) => ({
+    const serializedSubList = subListForStore.map(subscription => ({
       store_Id: subscription.store_Id ? subscription.store_Id.toString() : null,
     }));
 
     logger.info(`사용자 ID ${token.id}의 구독 리스트 생성 성공`);
-    return new Response(JSON.stringify(serializedSubList), { status: 200 }); // OK
+    return new Response(JSON.stringify(serializedSubList), {status: 200}); // OK
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("구독 리스트 처리 중 오류 발생: " + error.message);
+      logger.error('구독 리스트 처리 중 오류 발생: ' + error.message);
       return new Response(
-        JSON.stringify({ error: "내부 서버 오류", message: error.message }),
+        JSON.stringify({error: '내부 서버 오류', message: error.message}),
         {
           status: 500, // Internal Server Error
-        }
+        },
       );
     }
   }
@@ -274,7 +271,7 @@ export async function getSubscriptionList(token: Token) {
         user_Id: token.id,
       },
     });
-    console.log("subscriptionList :", subscriptionList);
+    console.log('subscriptionList :', subscriptionList);
     // // 구독 목록이 비어있는 경우
     // if (subscriptionList.length === 0) {
     //   logger.info("구독한 스토어 또는 인플루언서가 없습니다.");
@@ -283,25 +280,25 @@ export async function getSubscriptionList(token: Token) {
 
     // 구독 목록이 비어있는 경우
     if (subscriptionList.length === 0) {
-      logger.info("구독한 스토어 또는 인플루언서가 없습니다.");
+      logger.info('구독한 스토어 또는 인플루언서가 없습니다.');
       return new Response(
         JSON.stringify({
-          message: "구독한 스토어 또는 인플루언서가 없습니다.",
+          message: '구독한 스토어 또는 인플루언서가 없습니다.',
         }),
-        { status: 200 } // No Content
+        {status: 200}, // No Content
       );
     }
 
     const filterSubScriptionList = subscriptionList.filter(
-      (subscription) => subscription.store_Id || subscription.influencer_Id
+      subscription => subscription.store_Id || subscription.influencer_Id,
     );
-    console.log("filterSubScriptionList :", filterSubScriptionList);
+    console.log('filterSubScriptionList :', filterSubScriptionList);
     // 인플루언서와 스토어 ID를 포함한 목록 생성
     const serializedSubscriptionList = filterSubScriptionList.map(
-      (subscription) => ({
+      subscription => ({
         store_Id: subscription.store_Id?.toString(),
         influencer_Id: subscription.influencer_Id?.toString(),
-      })
+      }),
     );
 
     logger.info(`사용자 ID ${token.id}의 구독자 리스트 생성 성공`);
@@ -310,10 +307,10 @@ export async function getSubscriptionList(token: Token) {
     }); // OK
   } catch (error) {
     if (error instanceof Error) {
-      logger.error("구독자 리스트 처리 중 오류 발생: " + error.message);
+      logger.error('구독자 리스트 처리 중 오류 발생: ' + error.message);
       return new Response(
-        JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        JSON.stringify({error: '내부 서버 오류', message: error.message}),
+        {status: 500}, // Internal Server Error
       );
     }
   }

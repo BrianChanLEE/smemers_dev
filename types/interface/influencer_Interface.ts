@@ -7,10 +7,10 @@ export interface createInfluencerData {
 }
 
 enum Influencer_website {
-  Instagram = "instagram",
-  Tiktok = "tiktok",
-  Twitter = "twitter",
-  Facebook = "facebook",
+  Instagram = 'instagram',
+  Tiktok = 'tiktok',
+  Twitter = 'twitter',
+  Facebook = 'facebook',
 }
 
 export interface EnabledInfluencerData {
