@@ -33,7 +33,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -50,7 +50,7 @@ const handler = async (req: any, context: any) => {
           // 멤버십 생성 서비스 호출
           const response = await Membership_service.createMembership(
             body,
-            token
+            token,
           );
 
           if (!response) {
@@ -70,7 +70,7 @@ const handler = async (req: any, context: any) => {
                 message: "멤버십 생성 실패",
                 error: createMembershipResult.error,
               }),
-              { status: createMembershipResult.status || 500 }
+              { status: createMembershipResult.status || 500 },
             );
           } else {
             logger.info("멤버십 생성 성공");
@@ -80,7 +80,7 @@ const handler = async (req: any, context: any) => {
                 message: "멤버십 생성 성공",
                 data: createMembershipResult,
               }),
-              { status: 201 }
+              { status: 201 },
             );
           }
         }
@@ -93,7 +93,7 @@ const handler = async (req: any, context: any) => {
           // 500 (Internal Server Error) 상태 코드 반환
           return new Response(
             JSON.stringify({ error: "Internal server error" }),
-            { status: 500 }
+            { status: 500 },
           );
         }
       }
@@ -119,7 +119,7 @@ const handler = async (req: any, context: any) => {
                 success: false,
                 message: "조회된 멤버십이 없습니다.",
               }),
-              { status: 204 }
+              { status: 204 },
             );
           } else {
             // 조회된 멤버십이 있는 경우
@@ -129,7 +129,7 @@ const handler = async (req: any, context: any) => {
                 message: "모든 멤버십 조회에 성공했습니다.",
                 data: findAll,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         }
@@ -141,7 +141,7 @@ const handler = async (req: any, context: any) => {
           // 500 (Internal Server Error) 상태 코드 반환
           return new Response(
             JSON.stringify({ error: "Internal server error" }),
-            { status: 500 }
+            { status: 500 },
           );
         }
       }

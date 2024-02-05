@@ -50,7 +50,7 @@ export async function createStore(req: CreateStoreRequest, token: Token) {
           error:
             "이미 등록된 안플루언서 사용자입니다. 가게 등록을 원하신다면 고객센터에 문의 바랍니다.",
         }),
-        { status: 409 }
+        { status: 409 },
       ); // Conflict
     }
     // 입력 검증
@@ -58,7 +58,7 @@ export async function createStore(req: CreateStoreRequest, token: Token) {
       logger.info("필수 정보 누락");
       return new Response(
         JSON.stringify({ error: "필수 정보가 누락되었습니다." }),
-        { status: 400 } // Bad Request
+        { status: 400 }, // Bad Request
       );
     }
 
@@ -97,13 +97,13 @@ export async function createStore(req: CreateStoreRequest, token: Token) {
       if (error.message.includes("unique constraint")) {
         return new Response(
           JSON.stringify({ error: "이미 존재하는 매장 이름입니다." }),
-          { status: 409 } // Conflict
+          { status: 409 }, // Conflict
         );
       }
 
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -138,7 +138,7 @@ export async function getStoreById(id: bigint) {
       logger.info(`ID ${id}에 해당하는 Store가 존재하지 않습니다.`);
       return new Response(
         JSON.stringify({ error: "해당 ID의 Store가 존재하지 않습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -159,11 +159,11 @@ export async function getStoreById(id: bigint) {
   } catch (error) {
     if (error instanceof Error) {
       logger.error(
-        `ID ${id}에 해당하는 Store 조회 중 오류 발생: ${error.message}`
+        `ID ${id}에 해당하는 Store 조회 중 오류 발생: ${error.message}`,
       );
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -194,7 +194,7 @@ export async function getAllStores() {
       logger.info("조회할 Store가 존재하지 않습니다.");
       return new Response(
         JSON.stringify({ message: "조회할 Store가 존재하지 않습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -217,7 +217,7 @@ export async function getAllStores() {
       logger.error(`Store 조회 중 오류 발생: ${error.message}`);
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -251,7 +251,7 @@ export async function enabledStore(id: number) {
       logger.info(`ID ${id}에 해당하는 Store가 존재하지 않습니다.`);
       return new Response(
         JSON.stringify({ error: "해당 ID의 Store가 존재하지 않습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -261,7 +261,7 @@ export async function enabledStore(id: number) {
     });
 
     logger.info(
-      `ID ${id}에 해당하는 Store 업데이트를 성공적으로 완료했습니다.`
+      `ID ${id}에 해당하는 Store 업데이트를 성공적으로 완료했습니다.`,
     );
 
     const serializedStore = {
@@ -275,11 +275,11 @@ export async function enabledStore(id: number) {
   } catch (error) {
     if (error instanceof Error) {
       logger.error(
-        `ID ${id}에 해당하는 Store 업데이트 중 오류 발생: ${error.message}`
+        `ID ${id}에 해당하는 Store 업데이트 중 오류 발생: ${error.message}`,
       );
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -314,7 +314,7 @@ export async function updateStore(id: number, req: UpdateStoreData) {
       logger.info(`ID ${id}에 해당하는 Store가 존재하지 않습니다.`);
       return new Response(
         JSON.stringify({ error: "해당 ID의 Store가 존재하지 않습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -338,7 +338,7 @@ export async function updateStore(id: number, req: UpdateStoreData) {
     });
 
     logger.info(
-      `ID ${id}에 해당하는 Store 업데이트를 성공적으로 완료했습니다.`
+      `ID ${id}에 해당하는 Store 업데이트를 성공적으로 완료했습니다.`,
     );
     const serializedStore = {
       id: updatedStore.id.toString(),
@@ -356,7 +356,7 @@ export async function updateStore(id: number, req: UpdateStoreData) {
   } catch (error) {
     if (error instanceof Error) {
       logger.error(
-        `ID ${id}에 해당하는 Store 업데이트 중 오류 발생: ${error.message}`
+        `ID ${id}에 해당하는 Store 업데이트 중 오류 발생: ${error.message}`,
       );
 
       // 데이터베이스 관련 오류 처리
@@ -365,13 +365,13 @@ export async function updateStore(id: number, req: UpdateStoreData) {
           JSON.stringify({
             error: "제공된 데이터가 유니크 제약을 위반합니다.",
           }),
-          { status: 409 } // Conflict
+          { status: 409 }, // Conflict
         );
       }
 
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -404,7 +404,7 @@ export async function deleteStore(id: bigint) {
       logger.info(`ID ${id}에 해당하는 Store가 존재하지 않습니다.`);
       return new Response(
         JSON.stringify({ error: "해당 ID의 Store가 존재하지 않습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -418,25 +418,25 @@ export async function deleteStore(id: bigint) {
       }),
       {
         status: 200, // OK
-      }
+      },
     );
   } catch (error) {
     if (error instanceof Error) {
       logger.error(
-        `ID ${id}에 해당하는 Store 삭제 중 오류 발생: ${error.message}`
+        `ID ${id}에 해당하는 Store 삭제 중 오류 발생: ${error.message}`,
       );
 
       // 데이터베이스 관련 오류 처리
       if (error.message.includes("Record to delete does not exist.")) {
         return new Response(
           JSON.stringify({ error: "삭제할 Store가 존재하지 않습니다." }),
-          { status: 404 } // Not Found
+          { status: 404 }, // Not Found
         );
       }
 
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -465,10 +465,10 @@ export async function deleteStore(id: bigint) {
 export async function getStoresWithinRadius(
   lat: number,
   lng: number,
-  radius: number
+  radius: number,
 ) {
   logger.info(
-    `주어진 좌표 (${lat}, ${lng})로부터 반경 ${radius}m 내의 Store 조회를 시작합니다.`
+    `주어진 좌표 (${lat}, ${lng})로부터 반경 ${radius}m 내의 Store 조회를 시작합니다.`,
   );
   try {
     const allStores = await prisma.store.findMany({
@@ -488,7 +488,7 @@ export async function getStoresWithinRadius(
           lat,
           lng,
           store.lat,
-          store.lng
+          store.lng,
         );
         return distance! <= radius * 1000;
       } catch (error) {
@@ -503,7 +503,7 @@ export async function getStoresWithinRadius(
       logger.info("반경 내에 스토어가 존재하지 않음");
       return new Response(
         JSON.stringify({ message: "반경 내에 스토어가 없습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -517,11 +517,11 @@ export async function getStoresWithinRadius(
   } catch (error) {
     if (error instanceof Error) {
       logger.error(
-        `반경 내에 있는 모든 Store 조회 중 오류 발생: ${error.message}`
+        `반경 내에 있는 모든 Store 조회 중 오류 발생: ${error.message}`,
       );
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }

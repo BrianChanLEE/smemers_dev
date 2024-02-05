@@ -5,7 +5,7 @@ import Logger from "@/src/middleware/logger";
 const logger = new Logger("logs");
 export async function sendVerificationEmail(
   to: string,
-  verificationCode: string
+  verificationCode: string,
 ) {
   try {
     const transporter = nodemailer.createTransport({

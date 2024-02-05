@@ -45,11 +45,11 @@ export async function subInfluencer(req: SubInfluencerRequest, token: Token) {
       });
 
       logger.info(
-        `구독 취소: 사용자 ID ${token.id}, 인플루언서 ID ${req.influencer_Id}`
+        `구독 취소: 사용자 ID ${token.id}, 인플루언서 ID ${req.influencer_Id}`,
       );
       return new Response(
         JSON.stringify({ message: "구독이 취소되었습니다." }),
-        { status: 200 } // OK
+        { status: 200 }, // OK
       );
     } else {
       // 새 구독 생성
@@ -115,11 +115,11 @@ export async function subStore(req: SubStores, token: Token) {
       });
 
       logger.info(
-        `구독 취소: 사용자 ID ${token.id}, 스토어 ID ${req.store_Id}`
+        `구독 취소: 사용자 ID ${token.id}, 스토어 ID ${req.store_Id}`,
       );
       return new Response(
         JSON.stringify({ message: "구독이 취소되었습니다." }),
-        { status: 200 } // OK
+        { status: 200 }, // OK
       );
     } else {
       // 새 구독 생성
@@ -179,7 +179,7 @@ export async function getSubListForInfluencer(token: Token) {
       logger.info("구독한 인플루언서가 없습니다.");
       return new Response(
         JSON.stringify({ message: "구독한 인플루언서가 없습니다." }),
-        { status: 204 } // No Content
+        { status: 204 }, // No Content
       );
     }
 
@@ -199,7 +199,7 @@ export async function getSubListForInfluencer(token: Token) {
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
         {
           status: 500, // Internal Server Error
-        }
+        },
       );
     }
   }
@@ -234,7 +234,7 @@ export async function getSubListForStore(token: Token) {
       logger.info("구독한 스토어가 없습니다.");
       return new Response(
         JSON.stringify({ message: "구독한 스토어가 없습니다." }),
-        { status: 204 } // No Content
+        { status: 204 }, // No Content
       );
     }
 
@@ -252,7 +252,7 @@ export async function getSubListForStore(token: Token) {
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
         {
           status: 500, // Internal Server Error
-        }
+        },
       );
     }
   }
@@ -288,12 +288,12 @@ export async function getSubscriptionList(token: Token) {
         JSON.stringify({
           message: "구독한 스토어 또는 인플루언서가 없습니다.",
         }),
-        { status: 200 } // No Content
+        { status: 200 }, // No Content
       );
     }
 
     const filterSubScriptionList = subscriptionList.filter(
-      (subscription) => subscription.store_Id || subscription.influencer_Id
+      (subscription) => subscription.store_Id || subscription.influencer_Id,
     );
     console.log("filterSubScriptionList :", filterSubScriptionList);
     // 인플루언서와 스토어 ID를 포함한 목록 생성
@@ -301,7 +301,7 @@ export async function getSubscriptionList(token: Token) {
       (subscription) => ({
         store_Id: subscription.store_Id?.toString(),
         influencer_Id: subscription.influencer_Id?.toString(),
-      })
+      }),
     );
 
     logger.info(`사용자 ID ${token.id}의 구독자 리스트 생성 성공`);
@@ -313,7 +313,7 @@ export async function getSubscriptionList(token: Token) {
       logger.error("구독자 리스트 처리 중 오류 발생: " + error.message);
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }

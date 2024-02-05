@@ -31,7 +31,7 @@ const logger = new Logger("logs");
 
 export async function createLikeNotice(
   req: CreateLikeNoticeData,
-  token: Token
+  token: Token,
 ) {
   try {
     // 공지사항 존재 여부 확인
@@ -42,11 +42,11 @@ export async function createLikeNotice(
 
     if (!noticeExists) {
       logger.error(
-        `ID ${req.notice_id}에 해당하는 공지사항을 찾을 수 없습니다.`
+        `ID ${req.notice_id}에 해당하는 공지사항을 찾을 수 없습니다.`,
       );
       return new Response(
         JSON.stringify({ error: "해당 공지사항을 찾을 수 없습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -70,7 +70,7 @@ export async function createLikeNotice(
       logger.info(`ID ${req.notice_id}에 대한 좋아요가 제거되었습니다.`);
       return new Response(
         JSON.stringify({ message: "좋아요가 제거되었습니다.", disabled: true }),
-        { status: 200 } // OK
+        { status: 200 }, // OK
       );
     } else {
       // 좋아요 생성 및 disabled 해제
@@ -96,7 +96,7 @@ export async function createLikeNotice(
       logger.error("좋아요 처리 중 오류 발생: " + error.message);
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -134,7 +134,7 @@ export async function getLikeListForNotice(token: Token) {
           success: true,
           message: "좋아요를 누른 공지사항이 없습니다.",
         }),
-        { status: 200 } // OK
+        { status: 200 }, // OK
       );
     } else {
       // 공지사항 ID를 포함한 리스트 생성
@@ -151,7 +151,7 @@ export async function getLikeListForNotice(token: Token) {
           message: "좋아요 목록 조회 성공",
           data: serializedLikeList,
         }),
-        { status: 200 }
+        { status: 200 },
       ); // OK
     }
   } catch (error) {
@@ -163,7 +163,7 @@ export async function getLikeListForNotice(token: Token) {
           error: "내부 서버 오류",
           message: error.message,
         }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -194,7 +194,7 @@ export async function getLikeListForNotice(token: Token) {
 
 export async function createLikeInfluencer(
   req: CreateLikeInfluencerData,
-  token: Token
+  token: Token,
 ) {
   try {
     // 인플루언서 존재 여부 확인
@@ -204,11 +204,11 @@ export async function createLikeInfluencer(
 
     if (!influencerExists) {
       logger.error(
-        `ID ${req.influencer_id}에 해당하는 인플루언서를 찾을 수 없습니다.`
+        `ID ${req.influencer_id}에 해당하는 인플루언서를 찾을 수 없습니다.`,
       );
       return new Response(
         JSON.stringify({ error: "해당 인플루언서를 찾을 수 없습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -232,7 +232,7 @@ export async function createLikeInfluencer(
         logger.info(`ID ${req.influencer_id}에 대한 좋아요가 제거되었습니다.`);
       return new Response(
         JSON.stringify({ message: "좋아요가 제거되었습니다.", disabled: true }),
-        { status: 200 } // OK
+        { status: 200 }, // OK
       );
     } else {
       // 좋아요 생성
@@ -258,7 +258,7 @@ export async function createLikeInfluencer(
       logger.error("좋아요 처리 중 오류 발생: " + error.message);
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -296,7 +296,7 @@ export async function getLikeListForInfluencer(token: Token) {
           success: true,
           message: "좋아요를 누른 인플루언서가 없습니다.",
         }),
-        { status: 200 } // OK
+        { status: 200 }, // OK
       );
     } else {
       // 인플루언서 ID를 포함한 리스트 생성
@@ -313,7 +313,7 @@ export async function getLikeListForInfluencer(token: Token) {
           message: "좋아요 목록 조회 성공",
           data: serializedLikeList,
         }),
-        { status: 200 }
+        { status: 200 },
       ); // OK
     }
   } catch (error) {
@@ -325,7 +325,7 @@ export async function getLikeListForInfluencer(token: Token) {
           error: "내부 서버 오류",
           message: error.message,
         }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -363,7 +363,7 @@ export async function createLikeStore(req: CreateLikeStoreData, token: Token) {
       logger.error(`ID ${req.store_id}에 해당하는 상점을 찾을 수 없습니다.`);
       return new Response(
         JSON.stringify({ error: "해당 상점을 찾을 수 없습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -387,7 +387,7 @@ export async function createLikeStore(req: CreateLikeStoreData, token: Token) {
       logger.info(`ID ${req.store_id}에 대한 좋아요가 제거되었습니다.`);
       return new Response(
         JSON.stringify({ message: "좋아요가 제거되었습니다.", disabled: true }),
-        { status: 200 } // OK
+        { status: 200 }, // OK
       );
     } else {
       // 좋아요 생성
@@ -413,7 +413,7 @@ export async function createLikeStore(req: CreateLikeStoreData, token: Token) {
       logger.error("좋아요 처리 중 오류 발생: " + error.message);
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -451,7 +451,7 @@ export async function getLikeListForStore(token: Token) {
           success: true,
           message: "좋아요를 누른 가게가 없습니다.",
         }),
-        { status: 200 } // OK
+        { status: 200 }, // OK
       );
     } else {
       console.log("getLikeListForStore :", getLikeListForStore);
@@ -467,7 +467,7 @@ export async function getLikeListForStore(token: Token) {
           message: "좋아요 목록 조회 성공",
           data: serializedLikeList,
         }),
-        { status: 200 }
+        { status: 200 },
       ); // OK
     }
   } catch (error) {
@@ -479,7 +479,7 @@ export async function getLikeListForStore(token: Token) {
           error: "내부 서버 오류",
           message: error.message,
         }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -507,7 +507,7 @@ export async function getLikeListForStore(token: Token) {
 
 export async function CreateLikeMembership(
   req: CreateLikeMembershipData,
-  token: Token
+  token: Token,
 ) {
   try {
     // 맴버쉽 존재 여부 확인
@@ -518,11 +518,11 @@ export async function CreateLikeMembership(
 
     if (!membershipExists) {
       logger.error(
-        `ID ${req.membership_id}에 해당하는 맴버쉽을 찾을 수 없습니다.`
+        `ID ${req.membership_id}에 해당하는 맴버쉽을 찾을 수 없습니다.`,
       );
       return new Response(
         JSON.stringify({ error: "해당 맴버쉽을 찾을 수 없습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -546,7 +546,7 @@ export async function CreateLikeMembership(
       logger.info(`ID ${req.membership_id}에 대한 좋아요가 제거되었습니다.`);
       return new Response(
         JSON.stringify({ message: "좋아요가 제거되었습니다.", disabled: true }),
-        { status: 200 } // OK
+        { status: 200 }, // OK
       );
     } else {
       // 좋아요 생성 및 disabled 해제
@@ -572,7 +572,7 @@ export async function CreateLikeMembership(
       logger.error("좋아요 처리 중 오류 발생: " + error.message);
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -609,7 +609,7 @@ export async function getLikeListForMembership(token: Token) {
           success: true,
           message: "좋아요를 누른 맴버쉽이 없습니다.",
         }),
-        { status: 200 } // OK
+        { status: 200 }, // OK
       );
     } else {
       // 맴버쉽 ID를 포함한 리스트 생성
@@ -628,7 +628,7 @@ export async function getLikeListForMembership(token: Token) {
           message: "좋아요 목록 조회 성공",
           data: serializedLikeList,
         }),
-        { status: 200 }
+        { status: 200 },
       ); // OK
     }
   } catch (error) {
@@ -640,7 +640,7 @@ export async function getLikeListForMembership(token: Token) {
           error: "내부 서버 오류",
           message: error.message,
         }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }

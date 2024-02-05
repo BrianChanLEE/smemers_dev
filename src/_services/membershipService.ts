@@ -25,7 +25,7 @@ const logger = new Logger("logs");
  */
 export async function createMembership(
   req: createMembershipRequest,
-  token: any
+  token: any,
 ) {
   logger.info("새로운 Membership 생성을 시작합니다.");
 
@@ -44,7 +44,7 @@ export async function createMembership(
         JSON.stringify({
           error: "아직 인증되지 않은 회원입니다. 고객센터에 문의 바랍니다.",
         }),
-        { status: 403 } // Forbidden
+        { status: 403 }, // Forbidden
       );
     }
 
@@ -113,7 +113,7 @@ export async function getAllMembership() {
     if (memberships.length === 0) {
       return new Response(
         JSON.stringify({ message: "조회할 Membership이 없습니다." }),
-        { status: 204 } // No Content
+        { status: 204 }, // No Content
       );
     }
 
@@ -136,7 +136,7 @@ export async function getAllMembership() {
       logger.error(`Membership 조회 중 오류 발생: ${error.message}`);
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -168,7 +168,7 @@ export async function updateMembershipUseYn(req: any, token: any, Id: any) {
         JSON.stringify({ error: "해당 맴버쉽을 찾지 못했습니다." }),
         {
           status: 404, // Not Found 상태 코드
-        }
+        },
       );
     }
 

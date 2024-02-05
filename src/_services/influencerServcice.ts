@@ -30,7 +30,7 @@ const logger = new Logger("logs");
  */
 export async function createInfluencer(
   req: createInfluencerData,
-  token: Token
+  token: Token,
 ) {
   logger.info("새로운 Influencer 생성을 시작합니다.");
 
@@ -47,7 +47,7 @@ export async function createInfluencer(
           error:
             "이미 등록된 가게 사용자입니다. 인플루언서 등록을 원하신다면 고객센터에 문의 바랍니다.",
         }),
-        { status: 409 }
+        { status: 409 },
       ); // Conflict
     }
 
@@ -76,7 +76,7 @@ export async function createInfluencer(
       logger.info("유효하지 않은 이메일 형식");
       return new Response(
         JSON.stringify({ error: "유효하지 않은 이메일 형식" }),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -101,13 +101,13 @@ export async function createInfluencer(
       if (error.message.includes("unique constraint")) {
         return new Response(
           JSON.stringify({ error: "제공된 계정은 이미 존재합니다." }),
-          { status: 409 } // Conflict
+          { status: 409 }, // Conflict
         );
       }
 
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -142,12 +142,12 @@ export async function getInfluencerById(id: bigint) {
       logger.error(`ID ${id}에 해당하는 Influencer를 찾을 수 없습니다.`);
       return new Response(
         JSON.stringify({ error: "해당 Influencer를 찾을 수 없습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
     logger.info(
-      `ID ${id}에 해당하는 Influencer 조회를 성공적으로 완료했습니다.`
+      `ID ${id}에 해당하는 Influencer 조회를 성공적으로 완료했습니다.`,
     );
     const serializedInfluencer = {
       id: influencer.id.toString(),
@@ -163,11 +163,11 @@ export async function getInfluencerById(id: bigint) {
   } catch (error) {
     if (error instanceof Error) {
       logger.error(
-        `ID ${id}에 해당하는 Influencer 조회 중 오류 발생: ${error.message}`
+        `ID ${id}에 해당하는 Influencer 조회 중 오류 발생: ${error.message}`,
       );
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -197,7 +197,7 @@ export async function getAllInfluencer() {
       logger.info("조회할 Influencer가 존재하지 않습니다.");
       return new Response(
         JSON.stringify({ message: "조회할 Influencer가 존재하지 않습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -218,7 +218,7 @@ export async function getAllInfluencer() {
       logger.error(`Influencer 조회 중 오류 발생: ${error.message}`);
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -244,7 +244,7 @@ export async function getAllInfluencer() {
  */
 export async function enabledInfluencer(id: number) {
   logger.info(
-    `ID ${id}에 해당하는 Influencer의 활성화 상태 변경을 시작합니다.`
+    `ID ${id}에 해당하는 Influencer의 활성화 상태 변경을 시작합니다.`,
   );
   try {
     // 먼저 인플루언서가 존재하는지 확인
@@ -256,7 +256,7 @@ export async function enabledInfluencer(id: number) {
       logger.error(`ID ${id}에 해당하는 Influencer를 찾을 수 없습니다.`);
       return new Response(
         JSON.stringify({ error: "해당 Influencer를 찾을 수 없습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
     // console.log("influencer :", influencer);
@@ -270,7 +270,7 @@ export async function enabledInfluencer(id: number) {
 
     // console.log("updatedInfluencer :", updatedInfluencer);
     logger.info(
-      `ID ${id}에 해당하는 Influencer의 활성화 상태가 변경되었습니다.`
+      `ID ${id}에 해당하는 Influencer의 활성화 상태가 변경되었습니다.`,
     );
     const serializedInfluencer = {
       id: updatedInfluencer.id.toString(),
@@ -283,11 +283,11 @@ export async function enabledInfluencer(id: number) {
   } catch (error) {
     if (error instanceof Error) {
       logger.error(
-        `ID ${id}에 해당하는 Influencer 활성화 상태 변경 중 오류 발생: ${error.message}`
+        `ID ${id}에 해당하는 Influencer 활성화 상태 변경 중 오류 발생: ${error.message}`,
       );
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -325,7 +325,7 @@ export async function updateInfluencer(id: number, req: UpdateInfluencerData) {
       logger.error(`ID ${id}에 해당하는 Influencer를 찾을 수 없습니다.`);
       return new Response(
         JSON.stringify({ error: "해당 Influencer를 찾을 수 없습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -342,7 +342,7 @@ export async function updateInfluencer(id: number, req: UpdateInfluencerData) {
     });
 
     logger.info(
-      `ID ${id}에 해당하는 Influencer 업데이트를 성공적으로 완료했습니다.`
+      `ID ${id}에 해당하는 Influencer 업데이트를 성공적으로 완료했습니다.`,
     );
     const serializedInfluencer = {
       id: updatedInfluencer.id.toString(),
@@ -359,7 +359,7 @@ export async function updateInfluencer(id: number, req: UpdateInfluencerData) {
   } catch (error) {
     if (error instanceof Error) {
       logger.error(
-        `ID ${id}에 해당하는 Influencer 업데이트 중 오류 발생: ${error.message}`
+        `ID ${id}에 해당하는 Influencer 업데이트 중 오류 발생: ${error.message}`,
       );
 
       // 데이터베이스 관련 오류 처리
@@ -368,13 +368,13 @@ export async function updateInfluencer(id: number, req: UpdateInfluencerData) {
           JSON.stringify({
             error: "제공된 데이터가 유니크 제약을 위반합니다.",
           }),
-          { status: 409 } // Conflict
+          { status: 409 }, // Conflict
         );
       }
 
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -408,7 +408,7 @@ export async function deleteInfluencer(id: number) {
       logger.info(`ID ${id}에 해당하는 Influencer가 존재하지 않습니다.`);
       return new Response(
         JSON.stringify({ error: "해당 ID의 Influencer가 존재하지 않습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -423,16 +423,16 @@ export async function deleteInfluencer(id: number) {
       }),
       {
         status: 200, // OK
-      }
+      },
     );
   } catch (error) {
     if (error instanceof Error) {
       logger.error(
-        `ID ${id}에 해당하는 Influencer 삭제 중 오류 발생: ${error.message}`
+        `ID ${id}에 해당하는 Influencer 삭제 중 오류 발생: ${error.message}`,
       );
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }

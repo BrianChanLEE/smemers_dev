@@ -54,7 +54,7 @@ export async function bioAuthSetting(req: bioAuthSettingRequest, token: any) {
     logger.info(
       `사용자 ID ${userId}의 생체 인증 설정이 ${
         setBioAuth.bio_Auth === "ON" ? "켜짐" : "꺼짐"
-      }으로 설정되었습니다.`
+      }으로 설정되었습니다.`,
     );
 
     const serializedBioSet = {
@@ -71,7 +71,7 @@ export async function bioAuthSetting(req: bioAuthSettingRequest, token: any) {
         }으로 설정됨`,
         serializedBioSet,
       }),
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     if (error instanceof Error) {
@@ -84,7 +84,7 @@ export async function bioAuthSetting(req: bioAuthSettingRequest, token: any) {
           error: "내부 서버 오류",
           message: error.message,
         }),
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
@@ -129,7 +129,7 @@ export async function notifySetting(req: notifySettingRequest, token: any) {
     logger.info(
       `사용자 ID ${userId}의 알림 설정이 ${
         setNotify.notify === "ON" ? "켜짐" : "꺼짐"
-      }으로 설정되었습니다.`
+      }으로 설정되었습니다.`,
     );
 
     const serializednotifySet = {
@@ -147,7 +147,7 @@ export async function notifySetting(req: notifySettingRequest, token: any) {
         }으로 설정됨`,
         serializednotifySet,
       }),
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     if (error instanceof Error) {
@@ -160,7 +160,7 @@ export async function notifySetting(req: notifySettingRequest, token: any) {
           error: "내부 서버 오류",
           message: error.message,
         }),
-        { status: 500 }
+        { status: 500 },
       );
     }
   }

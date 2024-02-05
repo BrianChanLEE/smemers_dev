@@ -42,7 +42,7 @@ export async function noticeCreate(req: NoticeRequest, token: Token) {
     if (!user || user.role !== "Admin") {
       return new Response(
         JSON.stringify({ error: "접근 권한이 없습니다." }),
-        { status: 403 } // Forbidden
+        { status: 403 }, // Forbidden
       );
     }
 
@@ -51,7 +51,7 @@ export async function noticeCreate(req: NoticeRequest, token: Token) {
       // 비어 있는 경우 400 (Bad Request) 상태 코드와 오류 메시지를 반환
       return new Response(
         JSON.stringify({ error: "제목과 내용을 모두 입력해 주세요." }),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -121,7 +121,7 @@ export async function findAllNotice() {
     if (data.length === 0) {
       return new Response(
         JSON.stringify({ message: "조회할 공지사항이 없습니다." }),
-        { status: 204 } // No Content
+        { status: 204 }, // No Content
       );
     }
 
@@ -190,7 +190,7 @@ export async function findNoticeById(id: number) {
       // 조회된 게시글이 없는 경우
       return new Response(
         JSON.stringify({ message: `ID가 ${id}인 게시글을 찾을 수 없습니다.` }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -243,7 +243,7 @@ export const findAllPrivateNotice = async (token: Token) => {
     if (!user || user.role !== "Admin") {
       return new Response(
         JSON.stringify({ error: "접근 권한이 없습니다." }),
-        { status: 403 } // Forbidden
+        { status: 403 }, // Forbidden
       );
     }
 
@@ -255,7 +255,7 @@ export const findAllPrivateNotice = async (token: Token) => {
     if (data.length === 0) {
       return new Response(
         JSON.stringify({ message: "비공개 게시글이 없습니다." }),
-        { status: 200 } // OK
+        { status: 200 }, // OK
       );
     }
 
@@ -268,7 +268,7 @@ export const findAllPrivateNotice = async (token: Token) => {
 
     return new Response(
       JSON.stringify({ message: "조회 성공.", serializedNotice }),
-      { status: 200 } // OK
+      { status: 200 }, // OK
     );
   } catch (error) {
     if (error instanceof Error) {
@@ -278,7 +278,7 @@ export const findAllPrivateNotice = async (token: Token) => {
           message: "게시글 조회 오류 발생",
           error: error.message,
         }),
-        { status: 500 } // Internal Server Error
+        { status: 500 }, // Internal Server Error
       );
     }
   }
@@ -314,7 +314,7 @@ export const findAllPrivateNotice = async (token: Token) => {
 export async function updateNotice(
   data: NoticeUpdateData,
   noticeId: number,
-  token: Token
+  token: Token,
 ) {
   try {
     // 사용자의 역할 확인
@@ -331,7 +331,7 @@ export async function updateNotice(
     if (!data.subject || !data.contents) {
       return new Response(
         JSON.stringify({ error: "제목과 내용을 모두 입력해 주세요." }),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -342,7 +342,7 @@ export async function updateNotice(
     if (!existingNotice) {
       return new Response(
         JSON.stringify({ error: "게시글을 찾을 수 없습니다." }),
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -410,7 +410,7 @@ export async function removeNotice(token: Token, id: number) {
     if (!user || user.role !== "Admin") {
       return new Response(
         JSON.stringify({ error: "접근 권한이 없습니다." }),
-        { status: 403 } // Forbidden
+        { status: 403 }, // Forbidden
       );
     }
 
@@ -430,7 +430,7 @@ export async function removeNotice(token: Token, id: number) {
       // 조회된 게시글이 없는 경우
       return new Response(
         JSON.stringify({ message: `ID가 ${id}인 게시글을 찾을 수 없습니다.` }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -444,7 +444,7 @@ export async function removeNotice(token: Token, id: number) {
       JSON.stringify({ message: "게시글이 삭제되었습니다." }),
       {
         status: 200, // OK
-      }
+      },
     );
   } catch (error) {
     if (error instanceof Error) {

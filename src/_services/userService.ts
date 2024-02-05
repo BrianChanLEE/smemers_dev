@@ -43,7 +43,7 @@ export async function registerUser(req: any) {
       // 이메일 또는 검증 코드가 누락된 경우 401 (Unauthorized) 상태 코드와 오류 메시지를 반환
       return new Response(
         JSON.stringify({ error: "이메일 또는 검증 코드 누락" }),
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -55,7 +55,7 @@ export async function registerUser(req: any) {
       logger.info("유효하지 않은 이메일 형식");
       return new Response(
         JSON.stringify({ error: "유효하지 않은 이메일 형식" }),
-        { status: 400 }
+        { status: 400 },
       );
     }
     const existingUser = await prisma.user.findUnique({
@@ -69,7 +69,7 @@ export async function registerUser(req: any) {
         JSON.stringify({ error: "이메일이 이미 사용 중입니다." }),
         {
           status: 409,
-        }
+        },
       );
     }
 
@@ -83,7 +83,7 @@ export async function registerUser(req: any) {
     });
     console.log("validCode :", validCode);
     logger.info(
-      `prisma.verification_codes.findFirst ${req.email},${req.name},${req.verificationCode},`
+      `prisma.verification_codes.findFirst ${req.email},${req.name},${req.verificationCode},`,
     );
     if (!validCode) {
       logger.info(`이메일 ${req.email}의 검증 코드 무효 또는 만료`);
@@ -93,7 +93,7 @@ export async function registerUser(req: any) {
         JSON.stringify({
           error: "검증 코드가 유효하지 않거나 만료되었습니다.",
         }),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -110,7 +110,7 @@ export async function registerUser(req: any) {
     });
     console.log("newUser :", user);
     logger.info(
-      `prisma.user.create ${req.email},${req.name},${req.verificationCode},`
+      `prisma.user.create ${req.email},${req.name},${req.verificationCode},`,
     );
     // 사용자를 성공적으로 등록한 후 isVerified를 true로 업데이트
     logger.info(`이메일 ${req.email} 사용자 생성 및 검증 상태 업데이트 중`);
@@ -181,7 +181,7 @@ export async function registerUser(req: any) {
       // 오류 발생 시 오류 메시지 출력
       logger.error("회원가입 처리 중 오류 발생: " + error.message);
       logger.info(
-        ` 회원가입 처리 중 오류 발생: ${req.email},${req.name},${req.verificationCode}`
+        ` 회원가입 처리 중 오류 발생: ${req.email},${req.name},${req.verificationCode}`,
       );
       // 서버 내부 오류인 경우 500 (Internal Server Error) 상태 코드와 오류 메시지를 반환
       return new Response(JSON.stringify({ error: error.message }), {
@@ -223,7 +223,7 @@ export async function loginUser(req: HttpRequest) {
       // 이메일 또는 검증 코드가 누락된 경우 400 (Bad Request) 상태 코드와 오류 메시지를 반환
       return new Response(
         JSON.stringify({ error: "이메일과 검증 코드를 입력해 주세요." }),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -234,7 +234,7 @@ export async function loginUser(req: HttpRequest) {
       logger.info("유효하지 않은 이메일 형식");
       return new Response(
         JSON.stringify({ error: "유효하지 않은 이메일 형식" }),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -254,7 +254,7 @@ export async function loginUser(req: HttpRequest) {
         JSON.stringify({
           error: "해당 이메일로 등록된 사용자가 없습니다. 회원가입을 해주세요.",
         }),
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -275,7 +275,7 @@ export async function loginUser(req: HttpRequest) {
         JSON.stringify({
           error: "검증 코드가 유효하지 않거나 만료되었습니다.",
         }),
-        { status: 400 }
+        { status: 400 },
       );
     } else {
       // JWT 토큰 payload 최적화
@@ -377,7 +377,7 @@ export async function sendVerificationCode(req: any) {
       logger.info("유효하지 않은 이메일 형식");
       return new Response(
         JSON.stringify({ error: "유효하지 않은 이메일 형식" }),
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -388,7 +388,7 @@ export async function sendVerificationCode(req: any) {
     if (!user) {
       // 새 사용자인 경우, 검증 코드를 DB에 저장
       logger.info(
-        `이메일 ${req.email}에 해당하는 새 사용자, 검증 코드 생성 및 DB 저장`
+        `이메일 ${req.email}에 해당하는 새 사용자, 검증 코드 생성 및 DB 저장`,
       );
       const verificationCodeEntry = await prisma.verification_codes.create({
         data: {
@@ -422,7 +422,7 @@ export async function sendVerificationCode(req: any) {
     } else {
       // 기존 사용자인 경우, 사용자의 검증 코드를 업데이트
       logger.info(
-        `이메일 ${req.email}에 해당하는 기존 사용자, 검증 코드 업데이트`
+        `이메일 ${req.email}에 해당하는 기존 사용자, 검증 코드 업데이트`,
       );
       await prisma.user.update({
         where: { email: req.email },
@@ -453,7 +453,7 @@ export async function sendVerificationCode(req: any) {
     // 이메일 전송
     const emailSendResult = await sendVerificationEmail(
       req.email,
-      verificationCode
+      verificationCode,
     );
     if (emailSendResult.success) {
       logger.info(`이메일 ${req.email}로 검증 코드 성공적으로 전송`);
@@ -462,7 +462,7 @@ export async function sendVerificationCode(req: any) {
           success: true,
           message: "새 사용자 생성 및 검증 코드 발송 성공",
           statusCode: 201, // Created
-        })
+        }),
       );
     } else {
       logger.info(`이메일 ${req.email}로 검증 코드 전송 실패`);
@@ -471,7 +471,7 @@ export async function sendVerificationCode(req: any) {
           success: false,
           message: "검증 코드 이메일 발송 실패",
           statusCode: 502, // Bad Gateway
-        })
+        }),
       );
     }
   } catch (error) {
@@ -482,7 +482,7 @@ export async function sendVerificationCode(req: any) {
           success: false,
           message: `서버 내부 오류: ${error.message}`,
           statusCode: 500, // Internal Server Error
-        })
+        }),
       );
     }
   }
@@ -514,7 +514,7 @@ export async function removeMemberAccount(userId: any) {
       logger.info("사용자 ID 누락");
       return new Response(
         JSON.stringify({ error: "사용자 ID가 필요합니다." }),
-        { status: 400 } // Bad Request
+        { status: 400 }, // Bad Request
       );
     }
 
@@ -524,7 +524,7 @@ export async function removeMemberAccount(userId: any) {
       logger.info("해당 사용자를 찾을 수 없음");
       return new Response(
         JSON.stringify({ error: "해당 사용자를 찾을 수 없습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -536,7 +536,7 @@ export async function removeMemberAccount(userId: any) {
     logger.info("성공적으로 탈퇴되었습니다.");
     return new Response(
       JSON.stringify({ message: "성공적으로 탈퇴되었습니다." }),
-      { status: 200 } // OK
+      { status: 200 }, // OK
     );
   } catch (error) {
     if (error instanceof Error) {
@@ -546,13 +546,13 @@ export async function removeMemberAccount(userId: any) {
       if (error.message.includes("Record to delete does not exist.")) {
         return new Response(
           JSON.stringify({ error: "삭제할 사용자가 존재하지 않습니다." }),
-          { status: 404 } // Not Found
+          { status: 404 }, // Not Found
         );
       }
 
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
@@ -584,7 +584,7 @@ export async function disabledMemberAccount(userId: any) {
       logger.info("사용자 ID 누락");
       return new Response(
         JSON.stringify({ error: "사용자 ID가 필요합니다." }),
-        { status: 400 } // Bad Request
+        { status: 400 }, // Bad Request
       );
     }
 
@@ -596,7 +596,7 @@ export async function disabledMemberAccount(userId: any) {
       logger.info("해당 사용자를 찾을 수 없음");
       return new Response(
         JSON.stringify({ error: "해당 사용자를 찾을 수 없습니다." }),
-        { status: 404 } // Not Found
+        { status: 404 }, // Not Found
       );
     }
 
@@ -605,7 +605,7 @@ export async function disabledMemberAccount(userId: any) {
       logger.info("계정이 이미 비활성화됨");
       return new Response(
         JSON.stringify({ error: "계정이 이미 비활성화되었습니다." }),
-        { status: 409 } // Conflict
+        { status: 409 }, // Conflict
       );
     }
 
@@ -618,7 +618,7 @@ export async function disabledMemberAccount(userId: any) {
     logger.info("계정이 성공적으로 비활성화되었습니다.");
     return new Response(
       JSON.stringify({ message: "성공적으로 탈퇴되었습니다." }),
-      { status: 200 } // OK
+      { status: 200 }, // OK
     );
   } catch (error) {
     if (error instanceof Error) {

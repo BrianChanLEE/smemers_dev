@@ -24,7 +24,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "인증이 필요합니다." }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -33,7 +33,7 @@ const handler = async (req: any, context: any) => {
             logger.error("인증 토큰 검증 실패 또는 관리자 권한 없음");
             return new Response(
               JSON.stringify({ error: "접근 권한이 없습니다." }),
-              { status: 403 }
+              { status: 403 },
             );
           }
 
@@ -67,7 +67,7 @@ const handler = async (req: any, context: any) => {
                 message: "공지사항 생성에 실패했습니다.",
                 error: createNoticeResult.error,
               }),
-              { status: createNoticeResult.status || 500 }
+              { status: createNoticeResult.status || 500 },
             );
           } else {
             logger.info("공지사항 생성 성공");
@@ -77,7 +77,7 @@ const handler = async (req: any, context: any) => {
                 message: "공지사항이 성공적으로 생성되었습니다.",
                 data: createNoticeResult,
               }),
-              { status: 201 }
+              { status: 201 },
             );
           }
         }
@@ -107,7 +107,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "인증이 필요합니다." }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -116,7 +116,7 @@ const handler = async (req: any, context: any) => {
             logger.error("인증 토큰 검증 실패 또는 관리자 권한 없음");
             return new Response(
               JSON.stringify({ error: "접근 권한이 없습니다." }),
-              { status: 403 }
+              { status: 403 },
             );
           }
 
@@ -153,7 +153,7 @@ const handler = async (req: any, context: any) => {
           const updateNoticeResult = await noticeService.updateNotice(
             data,
             id,
-            token
+            token,
           );
           logger.info("게시글 수정 서비스 요청 완료");
           const result = await updateNoticeResult!.json();
@@ -168,7 +168,7 @@ const handler = async (req: any, context: any) => {
                 message: "게시글 수정 성공",
                 data: result,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           } else {
             return new Response(
@@ -177,7 +177,7 @@ const handler = async (req: any, context: any) => {
                 message: "게시글 수정 실패",
                 error: result.error,
               }),
-              { status: result.status || 500 }
+              { status: result.status || 500 },
             );
           }
         } else {
@@ -215,7 +215,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -235,7 +235,7 @@ const handler = async (req: any, context: any) => {
             // 서비스 응답이 없을 경우 503 (Service Unavailable) 상태 코드 반환
             return new Response(
               JSON.stringify({ error: "서비스를 사용할 수 없습니다." }),
-              { status: 503 }
+              { status: 503 },
             );
           }
 
@@ -250,7 +250,7 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 message: "조회된 공지사항이 없습니다.",
               }),
-              { status: 204 }
+              { status: 204 },
             );
           } else {
             logger.info("공지사항 조회 성공");
@@ -261,7 +261,7 @@ const handler = async (req: any, context: any) => {
                 message: "공지사항 조회에 성공했습니다.",
                 data: findAllNoticeResult,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         }
@@ -283,7 +283,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -304,7 +304,7 @@ const handler = async (req: any, context: any) => {
             // 서비스 응답이 없을 경우 503 (Service Unavailable) 상태 코드 반환
             return new Response(
               JSON.stringify({ error: "서비스를 사용할 수 없습니다." }),
-              { status: 503 }
+              { status: 503 },
             );
           }
 
@@ -318,7 +318,7 @@ const handler = async (req: any, context: any) => {
                 success: false,
                 message: "해당 ID의 공지사항이 존재하지 않습니다.",
               }),
-              { status: 404 }
+              { status: 404 },
             );
           } else {
             // 조회된 공지사항이 있는 경우
@@ -328,7 +328,7 @@ const handler = async (req: any, context: any) => {
                 message: "공지사항 조회 성공",
                 data: findOneNoticeResult,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         }
@@ -344,7 +344,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "인증이 필요합니다." }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -353,7 +353,7 @@ const handler = async (req: any, context: any) => {
             logger.error("인증 토큰 검증 실패 또는 관리자 권한 없음");
             return new Response(
               JSON.stringify({ error: "접근 권한이 없습니다." }),
-              { status: 403 }
+              { status: 403 },
             );
           }
 
@@ -372,7 +372,7 @@ const handler = async (req: any, context: any) => {
             // 서비스 응답이 없는 경우 503 (Service Unavailable) 상태 코드 반환
             return new Response(
               JSON.stringify({ error: "서비스를 사용할 수 없습니다." }),
-              { status: 503 }
+              { status: 503 },
             );
           }
 
@@ -386,7 +386,7 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 message: "비공개된 공지사항이 없습니다.",
               }),
-              { status: 204 }
+              { status: 204 },
             );
           } else {
             // 조회된 공지사항이 있는 경우
@@ -396,7 +396,7 @@ const handler = async (req: any, context: any) => {
                 message: "비공개된 공지사항 조회 성공",
                 data: findPublicNoticeResult,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         }
@@ -425,7 +425,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "인증이 필요합니다." }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -434,7 +434,7 @@ const handler = async (req: any, context: any) => {
             logger.error("인증 토큰 검증 실패 또는 관리자 권한 없음");
             return new Response(
               JSON.stringify({ error: "접근 권한이 없습니다." }),
-              { status: 403 }
+              { status: 403 },
             );
           }
 
@@ -456,7 +456,7 @@ const handler = async (req: any, context: any) => {
 
           const deleteNoticeResult = await noticeService.removeNotice(
             token,
-            id
+            id,
           );
           if (!deleteNoticeResult) {
             logger.error("게시글 삭제 실패");
@@ -466,7 +466,7 @@ const handler = async (req: any, context: any) => {
                 message: "게시글 삭제 실패",
                 error: deleteNoticeResult,
               }),
-              { status: 500 }
+              { status: 500 },
             );
           } else {
             logger.info("게시글 삭제 성공");
@@ -475,7 +475,7 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 message: "게시글 삭제 성공",
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         } else {

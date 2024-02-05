@@ -38,7 +38,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "인증이 필요합니다." }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -47,7 +47,7 @@ const handler = async (req: any, context: any) => {
             logger.error("인증 토큰 검증 실패");
             return new Response(
               JSON.stringify({ error: "접근 권한이 없습니다." }),
-              { status: 403 }
+              { status: 403 },
             );
           }
 
@@ -65,7 +65,7 @@ const handler = async (req: any, context: any) => {
             logger.error("알림 서비스 응답 없음");
             return new Response(
               JSON.stringify({ error: "알림 서비스 응답을 받을 수 없습니다." }),
-              { status: 503 }
+              { status: 503 },
             );
           }
 
@@ -79,7 +79,7 @@ const handler = async (req: any, context: any) => {
                 message: "새 공지사항 알림이 성공적으로 생성되었습니다.",
                 data: resultData.data,
               }),
-              { status: 201 }
+              { status: 201 },
             );
           } else {
             logger.error("새 공지사항 알림 생성 실패");
@@ -89,7 +89,7 @@ const handler = async (req: any, context: any) => {
                 message: "새 공지사항 알림 생성에 실패했습니다.",
                 error: resultData.error,
               }),
-              { status: 500 }
+              { status: 500 },
             );
           }
         }
@@ -105,7 +105,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "인증이 필요합니다." }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -114,7 +114,7 @@ const handler = async (req: any, context: any) => {
             logger.error("인증 토큰 검증 실패");
             return new Response(
               JSON.stringify({ error: "접근 권한이 없습니다." }),
-              { status: 403 }
+              { status: 403 },
             );
           }
 
@@ -132,7 +132,7 @@ const handler = async (req: any, context: any) => {
             logger.error("알림 서비스 응답 없음");
             return new Response(
               JSON.stringify({ error: "알림 서비스 응답을 받을 수 없습니다." }),
-              { status: 503 }
+              { status: 503 },
             );
           }
 
@@ -146,7 +146,7 @@ const handler = async (req: any, context: any) => {
                 message: "스토어 멤버십에 대한 사용자 알림이 성공적으로 생성됨",
                 data: resultData.data,
               }),
-              { status: 201 }
+              { status: 201 },
             );
           } else {
             logger.error("스토어 멤버십에 대한 사용자 알림 생성 실패");
@@ -156,7 +156,7 @@ const handler = async (req: any, context: any) => {
                 message: "스토어 멤버십에 대한 사용자 알림 생성에 실패함",
                 error: resultData.error,
               }),
-              { status: 500 }
+              { status: 500 },
             );
           }
         }
@@ -168,7 +168,7 @@ const handler = async (req: any, context: any) => {
             logger.error("인증 토큰 누락");
             return new Response(
               JSON.stringify({ error: "인증이 필요합니다." }),
-              { status: 401 }
+              { status: 401 },
             );
           }
 
@@ -177,7 +177,7 @@ const handler = async (req: any, context: any) => {
             logger.error("인증 토큰 검증 실패");
             return new Response(
               JSON.stringify({ error: "접근 권한이 없습니다." }),
-              { status: 403 }
+              { status: 403 },
             );
           }
 
@@ -195,7 +195,7 @@ const handler = async (req: any, context: any) => {
             logger.error("알림 서비스 응답 없음");
             return new Response(
               JSON.stringify({ error: "알림 서비스 응답을 받을 수 없습니다." }),
-              { status: 503 }
+              { status: 503 },
             );
           }
 
@@ -210,7 +210,7 @@ const handler = async (req: any, context: any) => {
                   "인플루언서 맴버쉽에 대한 사용자 알림이 성공적으로 생성됨",
                 data: resultData.data,
               }),
-              { status: 201 }
+              { status: 201 },
             );
           } else {
             logger.error("인플루언서 맴버쉽에 대한 사용자 알림 생성 실패");
@@ -220,7 +220,7 @@ const handler = async (req: any, context: any) => {
                 message: "인플루언서 맴버쉽에 대한 사용자 알림 생성에 실패함",
                 error: resultData.error,
               }),
-              { status: 500 }
+              { status: 500 },
             );
           }
         } else {
@@ -237,7 +237,7 @@ const handler = async (req: any, context: any) => {
               error: "내부 서버 오류",
               message: error.message,
             }),
-            { status: 500 }
+            { status: 500 },
           );
         }
       }

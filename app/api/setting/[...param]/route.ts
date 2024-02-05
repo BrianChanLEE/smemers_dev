@@ -66,7 +66,7 @@ const handler = async (req: any, context: any) => {
                 message: "User bio authentication setting updated successfully",
                 data: resultData,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           } else {
             logger.error("사용자 생체 인증 설정 변경 실패");
@@ -76,7 +76,7 @@ const handler = async (req: any, context: any) => {
                 message: "User bio authentication setting update failed",
                 data: resultData,
               }),
-              { status: 500 }
+              { status: 500 },
             );
           }
         }
@@ -101,7 +101,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
           logger.info(`토큰 검증 성공: 사용자 ID ${token.id}`);
@@ -125,7 +125,7 @@ const handler = async (req: any, context: any) => {
                 message: "사용자 알림 설정이 성공적으로 변경됨",
                 data: resultData,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           } else {
             logger.error("사용자 알림 설정 변경 실패");
@@ -135,7 +135,7 @@ const handler = async (req: any, context: any) => {
                 message: "사용자 알림 설정 변경에 실패함",
                 data: resultData,
               }),
-              { status: 500 }
+              { status: 500 },
             );
           }
         }
@@ -147,7 +147,7 @@ const handler = async (req: any, context: any) => {
               error: "Internal Server Error",
               message: error.message,
             }),
-            { status: 500 }
+            { status: 500 },
           );
         }
       }

@@ -36,7 +36,7 @@ const handler = async (req: any, context: any) => {
             logger.error("인증 토큰 검증 실패");
             return new Response(
               JSON.stringify({ error: "유효하지 않은 토큰" }),
-              { status: 401 }
+              { status: 401 },
             );
           }
 
@@ -54,7 +54,7 @@ const handler = async (req: any, context: any) => {
           // 인플루언서 구독 서비스 호출
           const response = await Subscription_Service.subInfluencer(
             body,
-            token
+            token,
           );
           const subInfluencerResult = await response!.json();
 
@@ -67,7 +67,7 @@ const handler = async (req: any, context: any) => {
                 message: "구독 실패",
                 error: subInfluencerResult.error,
               }),
-              { status: subInfluencerResult.status || 500 }
+              { status: subInfluencerResult.status || 500 },
             );
           } else if (subInfluencerResult.alreadySubscribed) {
             // 이미 구독 중인 경우
@@ -78,7 +78,7 @@ const handler = async (req: any, context: any) => {
                 message: "구독 취소 처리됨",
                 data: subInfluencerResult,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           } else {
             // 새로운 구독 생성 성공
@@ -89,7 +89,7 @@ const handler = async (req: any, context: any) => {
                 message: "구독 생성 성공",
                 data: subInfluencerResult,
               }),
-              { status: 201 }
+              { status: 201 },
             );
           }
         }
@@ -108,7 +108,7 @@ const handler = async (req: any, context: any) => {
             logger.error("인증 토큰 검증 실패");
             return new Response(
               JSON.stringify({ error: "유효하지 않은 토큰" }),
-              { status: 401 }
+              { status: 401 },
             );
           }
 
@@ -136,7 +136,7 @@ const handler = async (req: any, context: any) => {
                 message: "구독 실패",
                 error: subStoreResult.error,
               }),
-              { status: subStoreResult.status || 500 }
+              { status: subStoreResult.status || 500 },
             );
           } else if (subStoreResult.alreadySubscribed) {
             // 이미 구독 중인 경우
@@ -147,7 +147,7 @@ const handler = async (req: any, context: any) => {
                 message: "구독 취소 처리됨",
                 data: subStoreResult,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           } else {
             // 새로운 구독 생성 성공
@@ -158,7 +158,7 @@ const handler = async (req: any, context: any) => {
                 message: "구독 생성 성공",
                 data: subStoreResult,
               }),
-              { status: 201 }
+              { status: 201 },
             );
           }
         }
@@ -171,7 +171,7 @@ const handler = async (req: any, context: any) => {
           // 500 (Internal Server Error) 상태 코드 반환
           return new Response(
             JSON.stringify({ error: "Internal server error" }),
-            { status: 500 }
+            { status: 500 },
           );
         }
       }
@@ -193,7 +193,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -206,9 +206,8 @@ const handler = async (req: any, context: any) => {
           };
 
           // 스토어 구독 목록 서비스 호출
-          const response = await Subscription_Service.getSubscriptionList(
-            token
-          );
+          const response =
+            await Subscription_Service.getSubscriptionList(token);
           const findAll = await response!.json();
 
           if (!findAll) {
@@ -218,7 +217,7 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 message: "구독한 스토어나 인플루언서가 없습니다.",
               }),
-              { status: 200 }
+              { status: 200 },
             );
           } else {
             // 구독 목록이 있는 경우
@@ -228,7 +227,7 @@ const handler = async (req: any, context: any) => {
                 message: "구독 목록 조회 성공",
                 data: findAll,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         }
@@ -249,7 +248,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -262,9 +261,8 @@ const handler = async (req: any, context: any) => {
           };
 
           // 인플루언서 구독 목록 서비스 호출
-          const response = await Subscription_Service.getSubListForInfluencer(
-            token
-          );
+          const response =
+            await Subscription_Service.getSubListForInfluencer(token);
           const data = await response!.json();
 
           if (!data) {
@@ -274,7 +272,7 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 message: "구독한 인플루언서가 없습니다.",
               }),
-              { status: 204 }
+              { status: 204 },
             );
           } else {
             // 구독 목록이 있는 경우
@@ -284,7 +282,7 @@ const handler = async (req: any, context: any) => {
                 message: "구독 목록 조회 성공",
                 data: data,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         }
@@ -303,7 +301,7 @@ const handler = async (req: any, context: any) => {
             logger.error("인증 토큰 검증 실패");
             return new Response(
               JSON.stringify({ error: "유효하지 않은 토큰" }),
-              { status: 401 }
+              { status: 401 },
             );
           }
 
@@ -323,7 +321,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "Service unavailable" }),
               {
                 status: 503,
-              }
+              },
             );
           }
           const findAll = await response.json();
@@ -335,7 +333,7 @@ const handler = async (req: any, context: any) => {
                 success: false,
                 message: "No content",
               }),
-              { status: 204 }
+              { status: 204 },
             );
           } else {
             // 조회된 데이터가 있는 경우
@@ -345,7 +343,7 @@ const handler = async (req: any, context: any) => {
                 message: "findAll successful",
                 data: findAll,
               }),
-              { status: 201 }
+              { status: 201 },
             );
           }
         }
@@ -357,7 +355,7 @@ const handler = async (req: any, context: any) => {
           // 500 (Internal Server Error) 상태 코드 반환
           return new Response(
             JSON.stringify({ error: "Internal server error" }),
-            { status: 500 }
+            { status: 500 },
           );
         }
       }

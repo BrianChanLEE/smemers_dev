@@ -43,7 +43,7 @@ class Logger {
             .replace("T", " ")
             .substring(0, 19)} ${info.level}: ${info.message}`;
         }),
-        winston.format.json() // 로그 메시지를 JSON 형식으로 포맷
+        winston.format.json(), // 로그 메시지를 JSON 형식으로 포맷
       ),
       transports: [
         new winston.transports.File({ filename: path.join(logDir, "app.log") }), // 로그를 파일에 저장
@@ -58,7 +58,7 @@ class Logger {
       this.logger.add(
         new winston.transports.Console({
           format: winston.format.simple(), // 콘솔에 간단한 형식으로 로그 출력
-        })
+        }),
       );
     }
   }

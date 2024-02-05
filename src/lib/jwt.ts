@@ -17,7 +17,7 @@ const DEFAULT_REFRESH_SIGN_OPTION: SignOption = {
 
 export function signJwtAccessToken(
   payload: JwtPayload,
-  options: SignOption = DEFAULT_SIGN_OPTION
+  options: SignOption = DEFAULT_SIGN_OPTION,
 ) {
   try {
     const secret_key = process.env.SECRET_KEY;
@@ -57,7 +57,7 @@ export function verifyJwt(token: string) {
 // RefreshToken 생성 함수
 export function signJwtRefreshToken(
   payload: JwtPayload,
-  options: SignOption = DEFAULT_REFRESH_SIGN_OPTION
+  options: SignOption = DEFAULT_REFRESH_SIGN_OPTION,
 ) {
   try {
     const secret_key = process.env.REFRESH_SECRET_KEY; // 별도의 refresh secret key 사용

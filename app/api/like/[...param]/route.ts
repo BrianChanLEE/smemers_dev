@@ -37,7 +37,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -67,7 +67,7 @@ const handler = async (req: any, context: any) => {
                 message: "좋아요 생성 실패",
                 error: createLikeNoticeResult.error,
               }),
-              { status: createLikeNoticeResult.status || 500 }
+              { status: createLikeNoticeResult.status || 500 },
             );
           } else if (createLikeNoticeResult.alreadyExists) {
             // 이미 좋아요가 존재하는 경우
@@ -78,7 +78,7 @@ const handler = async (req: any, context: any) => {
                 message: "좋아요 이미 존재함",
                 data: createLikeNoticeResult,
               }),
-              { status: 200 } // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
+              { status: 200 }, // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
             );
           } else {
             // 좋아요 생성 성공
@@ -88,7 +88,7 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 data: createLikeNoticeResult,
               }),
-              { status: 201 } // 새로운 좋아요 생성 후 201 반환
+              { status: 201 }, // 새로운 좋아요 생성 후 201 반환
             );
           }
         }
@@ -108,7 +108,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -138,7 +138,7 @@ const handler = async (req: any, context: any) => {
                 message: "좋아요 생성 실패",
                 error: createLikeMembershipResult.error,
               }),
-              { status: createLikeMembershipResult.status || 500 }
+              { status: createLikeMembershipResult.status || 500 },
             );
           } else if (createLikeMembershipResult.alreadyExists) {
             // 이미 좋아요가 존재하는 경우
@@ -149,7 +149,7 @@ const handler = async (req: any, context: any) => {
                 message: "좋아요 이미 존재함",
                 data: createLikeMembershipResult,
               }),
-              { status: 200 } // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
+              { status: 200 }, // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
             );
           } else {
             // 좋아요 생성 성공
@@ -159,7 +159,7 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 data: createLikeMembershipResult,
               }),
-              { status: 201 } // 새로운 좋아요 생성 후 201 반환
+              { status: 201 }, // 새로운 좋아요 생성 후 201 반환
             );
           }
         }
@@ -182,7 +182,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -212,7 +212,7 @@ const handler = async (req: any, context: any) => {
                 message: "좋아요 생성 실패",
                 error: createLikeInfluencerResult.error,
               }),
-              { status: createLikeInfluencerResult.status || 500 }
+              { status: createLikeInfluencerResult.status || 500 },
             );
           } else if (createLikeInfluencerResult.alreadyExists) {
             // 이미 좋아요가 존재하는 경우
@@ -223,7 +223,7 @@ const handler = async (req: any, context: any) => {
                 message: "좋아요 이미 존재함",
                 data: createLikeInfluencerResult,
               }),
-              { status: 200 } // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
+              { status: 200 }, // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
             );
           } else {
             // 좋아요 생성 성공
@@ -233,7 +233,7 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 data: createLikeInfluencerResult,
               }),
-              { status: 201 } // 새로운 좋아요 생성 후 201 반환
+              { status: 201 }, // 새로운 좋아요 생성 후 201 반환
             );
           }
         }
@@ -255,7 +255,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -287,7 +287,7 @@ const handler = async (req: any, context: any) => {
                 message: "좋아요 생성 실패",
                 error: createLikeStoreResult.error,
               }),
-              { status: createLikeStoreResult.status || 500 }
+              { status: createLikeStoreResult.status || 500 },
             );
           } else if (createLikeStoreResult.alreadyExists) {
             // 이미 좋아요가 존재하는 경우
@@ -298,7 +298,7 @@ const handler = async (req: any, context: any) => {
                 message: "좋아요 이미 존재함",
                 data: createLikeStoreResult,
               }),
-              { status: 200 } // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
+              { status: 200 }, // 이미 좋아요가 있으면 좋아요 제거 후 200 반환
             );
           } else {
             // 좋아요 생성 성공
@@ -308,7 +308,7 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 data: createLikeStoreResult,
               }),
-              { status: 201 } // 새로운 좋아요 생성 후 201 반환
+              { status: 201 }, // 새로운 좋아요 생성 후 201 반환
             );
           }
         }
@@ -317,7 +317,7 @@ const handler = async (req: any, context: any) => {
           logger.error(`처리 중 예외 발생: ${error.message}`);
           return new Response(
             JSON.stringify({ error: "서버 내부 오류", message: error.message }),
-            { status: 500 }
+            { status: 500 },
           );
         }
       }
@@ -341,7 +341,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
 
@@ -365,7 +365,7 @@ const handler = async (req: any, context: any) => {
                 message: "리스트 요청 실패",
                 error: getLikeNoticeListResult.error,
               }),
-              { status: getLikeNoticeListResult.status || 500 }
+              { status: getLikeNoticeListResult.status || 500 },
             );
           } else if (getLikeNoticeListResult.length === 0) {
             // 좋아요 누른 공지사항이 없는 경우
@@ -374,7 +374,7 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 message: "좋아한 공지사항이 없습니다.",
               }),
-              { status: 204 }
+              { status: 204 },
             );
           } else {
             // 좋아요 누른 공지사항 목록 조회 성공
@@ -384,7 +384,7 @@ const handler = async (req: any, context: any) => {
                 message: "좋아요 목록 조회 성공",
                 data: getLikeNoticeListResult,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         }
@@ -402,7 +402,7 @@ const handler = async (req: any, context: any) => {
             logger.error("인증 토큰 검증 실패");
             return new Response(
               JSON.stringify({ error: "유효하지 않은 토큰" }),
-              { status: 401 }
+              { status: 401 },
             );
           }
 
@@ -426,7 +426,7 @@ const handler = async (req: any, context: any) => {
                 message: "리스트 요청 실패",
                 error: getLikeListForInfluencerResult.error,
               }),
-              { status: getLikeListForInfluencerResult.status || 500 }
+              { status: getLikeListForInfluencerResult.status || 500 },
             );
           } else if (getLikeListForInfluencerResult.length === 0) {
             // 좋아요 누른 인플루언서가 없는 경우
@@ -435,7 +435,7 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 message: "좋아한 인플루언서가 없습니다.",
               }),
-              { status: 204 }
+              { status: 204 },
             );
           } else {
             // 좋아요 누른 인플루언서 목록 조회 성공
@@ -445,7 +445,7 @@ const handler = async (req: any, context: any) => {
                 message: "좋아요 목록 조회 성공",
                 data: getLikeListForInfluencerResult,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         }
@@ -463,7 +463,7 @@ const handler = async (req: any, context: any) => {
             logger.error("인증 토큰 검증 실패");
             return new Response(
               JSON.stringify({ error: "유효하지 않은 토큰" }),
-              { status: 401 }
+              { status: 401 },
             );
           }
 
@@ -486,7 +486,7 @@ const handler = async (req: any, context: any) => {
                 message: "리스트 요청 실패",
                 error: getLikeListForStoreResult.error,
               }),
-              { status: getLikeListForStoreResult.status || 500 }
+              { status: getLikeListForStoreResult.status || 500 },
             );
           } else if (getLikeListForStoreResult.length === 0) {
             // 좋아요 누른 가게 없는 경우
@@ -495,7 +495,7 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 message: "좋아한 가게가 없습니다.",
               }),
-              { status: 204 }
+              { status: 204 },
             );
           } else {
             // 좋아요 누른 가게 목록 조회 성공
@@ -505,7 +505,7 @@ const handler = async (req: any, context: any) => {
                 message: "좋아요 목록 조회 성공",
                 data: getLikeListForStoreResult,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         }
@@ -523,7 +523,7 @@ const handler = async (req: any, context: any) => {
             logger.error("인증 토큰 검증 실패");
             return new Response(
               JSON.stringify({ error: "유효하지 않은 토큰" }),
-              { status: 401 }
+              { status: 401 },
             );
           }
 
@@ -546,7 +546,7 @@ const handler = async (req: any, context: any) => {
                 message: "리스트 요청 실패",
                 error: getLikeListForMembershipResult.error,
               }),
-              { status: getLikeListForMembershipResult.status || 500 }
+              { status: getLikeListForMembershipResult.status || 500 },
             );
           } else if (getLikeListForMembershipResult.length === 0) {
             // 좋아요 누른 가게 없는 경우
@@ -555,7 +555,7 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 message: "좋아한 멤버쉽이 없습니다.",
               }),
-              { status: 204 }
+              { status: 204 },
             );
           } else {
             // 좋아요 누른 가게 목록 조회 성공
@@ -565,7 +565,7 @@ const handler = async (req: any, context: any) => {
                 message: "좋아요 목록 조회 성공",
                 data: getLikeListForMembershipResult,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         }
@@ -575,7 +575,7 @@ const handler = async (req: any, context: any) => {
           logger.error(`처리 중 예외 발생: ${error.message}`);
           return new Response(
             JSON.stringify({ error: "Internal server error" }),
-            { status: 500 }
+            { status: 500 },
           );
         }
       }

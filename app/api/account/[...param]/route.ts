@@ -46,7 +46,7 @@ const handler = async (req: any, context: any) => {
                 success: false,
                 message: "이메일 또는 검증 코드 누락",
               }),
-              { status: 400 }
+              { status: 400 },
             );
           }
 
@@ -62,7 +62,7 @@ const handler = async (req: any, context: any) => {
                 success: false,
                 message: "해당 이메일로 등록된 사용자 없음",
               }),
-              { status: 404 }
+              { status: 404 },
             );
           } else if (loginResult.status === 400) {
             // 검증 코드 무효 또는 만료된 경우
@@ -72,7 +72,7 @@ const handler = async (req: any, context: any) => {
                 success: false,
                 message: "검증 코드 무효 또는 만료",
               }),
-              { status: 400 }
+              { status: 400 },
             );
           } else if (loginResult.status === 200) {
             // 로그인 성공 시
@@ -84,7 +84,7 @@ const handler = async (req: any, context: any) => {
                 message: "로그인 성공",
                 data: resultData,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           } else {
             // 기타 서버 내부 오류
@@ -94,7 +94,7 @@ const handler = async (req: any, context: any) => {
                 success: false,
                 message: "서버 내부 오류",
               }),
-              { status: 500 }
+              { status: 500 },
             );
           }
         }
@@ -120,7 +120,7 @@ const handler = async (req: any, context: any) => {
                 success: false,
                 message: "이메일 또는 검증 코드 누락",
               }),
-              { status: 401 }
+              { status: 401 },
             );
           } else if (registerResult!.status === 409) {
             // 이메일이 이미 사용 중
@@ -130,7 +130,7 @@ const handler = async (req: any, context: any) => {
                 success: false,
                 message: "이메일이 이미 사용 중",
               }),
-              { status: 409 }
+              { status: 409 },
             );
           } else if (registerResult!.status === 400) {
             // 검증 코드 무효 또는 만료
@@ -140,7 +140,7 @@ const handler = async (req: any, context: any) => {
                 success: false,
                 message: "검증 코드 무효 또는 만료",
               }),
-              { status: 400 }
+              { status: 400 },
             );
           } else if (registerResult!.status === 200) {
             // 회원가입 성공
@@ -152,7 +152,7 @@ const handler = async (req: any, context: any) => {
                 message: "회원가입 성공",
                 data: resultData,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           } else {
             // 서버 내부 오류
@@ -162,7 +162,7 @@ const handler = async (req: any, context: any) => {
                 success: false,
                 message: "서버 내부 오류",
               }),
-              { status: 500 }
+              { status: 500 },
             );
           }
         }
@@ -192,7 +192,7 @@ const handler = async (req: any, context: any) => {
                 message: "검증 코드 발송 성공",
                 data: resultData,
               }),
-              { status: 201 }
+              { status: 201 },
             );
           } else {
             // 검증 코드 이메일 발송 실패 시
@@ -206,7 +206,7 @@ const handler = async (req: any, context: any) => {
                 message: "검증 코드 이메일 발송 실패",
                 data: resultData,
               }),
-              { status: codeResult!.status }
+              { status: codeResult!.status },
             );
           }
         }
@@ -220,7 +220,7 @@ const handler = async (req: any, context: any) => {
             JSON.stringify({ error: "Internal server error" }),
             {
               status: 500,
-            }
+            },
           );
         }
       }
@@ -249,7 +249,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
           logger.info(`토큰 검증 성공: 사용자 ID ${token.id}`);
@@ -273,7 +273,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "사용자 찾을 수 없음" }),
               {
                 status: 404,
-              }
+              },
             );
           } else if (disableUserResult!.status === 409) {
             logger.error("계정이 이미 비활성화됨");
@@ -281,7 +281,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "계정 이미 비활성화됨" }),
               {
                 status: 409,
-              }
+              },
             );
           } else if (disableUserResult!.status === 200) {
             logger.info("사용자 계정 비활성화 성공");
@@ -290,13 +290,13 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 message: "사용자 계정 비활성화 성공",
               }),
-              { status: 200 }
+              { status: 200 },
             );
           } else {
             logger.error("사용자 계정 비활성화 실패");
             return new Response(
               JSON.stringify({ error: "사용자 계정 비활성화 실패" }),
-              { status: 500 }
+              { status: 500 },
             );
           }
         }
@@ -308,7 +308,7 @@ const handler = async (req: any, context: any) => {
               error: "서버 내부 오류",
               message: error.message,
             }),
-            { status: 500 }
+            { status: 500 },
           );
         }
       }
@@ -337,7 +337,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
           logger.info(`토큰 검증 성공: 사용자 ID ${token.id}`);
@@ -362,7 +362,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "사용자 찾을 수 없음" }),
               {
                 status: 404,
-              }
+              },
             );
           } else if (removeAccountResult!.status === 200) {
             logger.info("사용자 계정 탈퇴 성공");
@@ -371,13 +371,13 @@ const handler = async (req: any, context: any) => {
                 success: true,
                 message: "사용자 계정 탈퇴 성공",
               }),
-              { status: 200 }
+              { status: 200 },
             );
           } else {
             logger.error("사용자 계정 탈퇴 실패");
             return new Response(
               JSON.stringify({ error: "사용자 계정 탈퇴 실패" }),
-              { status: 500 }
+              { status: 500 },
             );
           }
         }
@@ -389,7 +389,7 @@ const handler = async (req: any, context: any) => {
               error: "Internal Server Error",
               message: error.message,
             }),
-            { status: 500 }
+            { status: 500 },
           );
         }
       }

@@ -48,7 +48,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
           logger.info(`토큰 검증 성공: 사용자 ID ${token.id}`);
@@ -69,7 +69,7 @@ const handler = async (req: any, context: any) => {
                 JSON.stringify({
                   error: "이미 존재하는 매장 이름",
                 }),
-                { status: 409 }
+                { status: 409 },
               );
             }
 
@@ -78,7 +78,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({
                 error: "매장 생성 실패",
               }),
-              { status: 500 }
+              { status: 500 },
             );
           } else {
             logger.info("매장 생성 성공");
@@ -90,7 +90,7 @@ const handler = async (req: any, context: any) => {
                 message: "매장 생성 성공",
                 data: createStoreResult,
               }),
-              { status: 201 }
+              { status: 201 },
             );
           }
         }
@@ -103,7 +103,7 @@ const handler = async (req: any, context: any) => {
           // 500 (Internal Server Error) 상태 코드 반환
           return new Response(
             JSON.stringify({ error: "서버 내부 오류", message: error.message }),
-            { status: 500 }
+            { status: 500 },
           );
         }
       }
@@ -123,7 +123,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({
                 error: "매장이 존재하지 않음",
               }),
-              { status: 404 }
+              { status: 404 },
             );
           } else {
             // 조회된 데이터가 있는 경우
@@ -133,7 +133,7 @@ const handler = async (req: any, context: any) => {
                 message: "모든 매장 조회 성공",
                 data: findAll,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         }
@@ -161,7 +161,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
           logger.info(`토큰 검증 성공: 사용자 ID ${token.id}`);
@@ -183,7 +183,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({
                 error: "매장 찾을 수 없음",
               }),
-              { status: 404 }
+              { status: 404 },
             );
           } else {
             // 조회된 데이터가 있는 경우
@@ -193,7 +193,7 @@ const handler = async (req: any, context: any) => {
                 message: "매장 조회 성공",
                 data: findOne,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         }
@@ -218,7 +218,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
           logger.info(`토큰 검증 성공: 사용자 ID ${token.id}`);
@@ -239,7 +239,7 @@ const handler = async (req: any, context: any) => {
                 success: false,
                 message: "반경 내 매장 없음",
               }),
-              { status: 404 }
+              { status: 404 },
             );
           } else {
             // 조회된 데이터가 있는 경우
@@ -249,7 +249,7 @@ const handler = async (req: any, context: any) => {
                 message: "반경 내 매장 조회 성공",
                 data: storesWithinRadius,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         }
@@ -261,7 +261,7 @@ const handler = async (req: any, context: any) => {
           // 500 (Internal Server Error) 상태 코드 반환
           return new Response(
             JSON.stringify({ error: "서버 내부 오류", message: error.message }),
-            { status: 500 }
+            { status: 500 },
           );
         }
       }
@@ -296,7 +296,7 @@ const handler = async (req: any, context: any) => {
                 message: "매장 활성화 업데이트 성공",
                 data: updateResult,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           } else {
             // 업데이트 실패 시
@@ -306,7 +306,7 @@ const handler = async (req: any, context: any) => {
                 message: "매장 활성화 업데이트 실패",
                 error: updateResult.error,
               }),
-              { status: updateResult.status || 500 }
+              { status: updateResult.status || 500 },
             );
           }
         }
@@ -341,7 +341,7 @@ const handler = async (req: any, context: any) => {
                 message: "updateResult successful",
                 data: updateResult,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           } else {
             // 업데이트 실패 시
@@ -350,7 +350,7 @@ const handler = async (req: any, context: any) => {
                 success: false,
                 message: "createStoreResult failed",
               }),
-              { status: 401 }
+              { status: 401 },
             );
           }
         } else {
@@ -367,7 +367,7 @@ const handler = async (req: any, context: any) => {
           // 500 (Internal Server Error) 상태 코드 반환
           return new Response(
             JSON.stringify({ error: "Internal server error" }),
-            { status: 500 }
+            { status: 500 },
           );
         }
       }
@@ -390,7 +390,7 @@ const handler = async (req: any, context: any) => {
               JSON.stringify({ error: "유효하지 않은 토큰" }),
               {
                 status: 401,
-              }
+              },
             );
           }
           logger.info(`토큰 검증 성공: 사용자 ID ${token.id}`);
@@ -415,7 +415,7 @@ const handler = async (req: any, context: any) => {
                 message: "매장 삭제 실패",
                 error: deleteResult.error,
               }),
-              { status: deleteResult.status || 500 }
+              { status: deleteResult.status || 500 },
             );
           } else {
             // 삭제 성공 시
@@ -425,7 +425,7 @@ const handler = async (req: any, context: any) => {
                 message: "매장 삭제 성공",
                 data: deleteResult,
               }),
-              { status: 200 }
+              { status: 200 },
             );
           }
         }
@@ -437,7 +437,7 @@ const handler = async (req: any, context: any) => {
           // 500 (Internal Server Error) 상태 코드 반환
           return new Response(
             JSON.stringify({ error: "서버 내부 오류", message: error.message }),
-            { status: 500 }
+            { status: 500 },
           );
         }
       }

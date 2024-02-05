@@ -45,7 +45,7 @@ export async function notifyMembershipForStore(token: any) {
     if (userSetting!.notify === "OFF") {
       return new Response(
         JSON.stringify({ message: "알림 설정이 꺼져 있습니다." }),
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -100,19 +100,19 @@ export async function notifyMembershipForStore(token: any) {
     if (notificationsCreated.length > 0) {
       return new Response(
         JSON.stringify({ notifications: notificationsCreated }),
-        { status: 201 }
+        { status: 201 },
       );
     } else {
       return new Response(
         JSON.stringify({ message: "새 멤버십이 없습니다." }),
-        { status: 200 }
+        { status: 200 },
       );
     }
   } catch (error) {
     if (error instanceof Error) {
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
@@ -154,7 +154,7 @@ export async function notifyMembershipForInfluencer(token: any) {
     if (userSetting?.notify === "OFF") {
       return new Response(
         JSON.stringify({ message: "알림 설정이 꺼져 있습니다." }),
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -207,13 +207,13 @@ export async function notifyMembershipForInfluencer(token: any) {
     if (notificationsCreated.length > 0) {
       return new Response(
         JSON.stringify({ notifications: notificationsCreated }),
-        { status: 201 }
+        { status: 201 },
       );
     } else {
       // 새 멤버십이 없는 경우 해당 메시지를 응답으로 반환
       return new Response(
         JSON.stringify({ message: "새 멤버십이 없습니다." }),
-        { status: 200 }
+        { status: 200 },
       );
     }
   } catch (error) {
@@ -221,7 +221,7 @@ export async function notifyMembershipForInfluencer(token: any) {
     if (error instanceof Error) {
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
@@ -289,13 +289,13 @@ export async function notifyForNotices(token: Token) {
       // 생성된 알림 목록을 포함한 응답 반환
       return new Response(
         JSON.stringify({ notifications: notificationsCreated }),
-        { status: 201 }
+        { status: 201 },
       );
     } else {
       // 새 공지사항이 없는 경우 메시지를 포함한 응답 반환
       return new Response(
         JSON.stringify({ message: "새 공지사항이 없습니다." }),
-        { status: 200 }
+        { status: 200 },
       );
     }
   } catch (error) {
@@ -304,7 +304,7 @@ export async function notifyForNotices(token: Token) {
       // 오류 메시지와 함께 500 상태 코드 반환
       return new Response(
         JSON.stringify({ error: "내부 서버 오류", message: error.message }),
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
