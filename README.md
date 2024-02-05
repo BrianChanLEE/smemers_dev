@@ -102,9 +102,6 @@ measurementId: "G-7Y2XJS8XZN"
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-
-
-
-TODO: SWAGGER 
+TODO: SWAGGER
 https://github.com/jellydn/next-swagger-doc
-문제점 현재의 라우터 방식으론 어려운 부분이 있음 
+문제점 현재의 라우터 방식으론 어려운 부분이 있음
