@@ -3,48 +3,48 @@ import Logger from '@/src/middleware/logger';
 import {verifyJwt} from '@/src/lib/jwt';
 import {Token} from '@/types/interface/Token_Interface';
 
-// /**
-//  * @swagger
-//  * /api/like:
-//  *   post:
-//  *     summary: 다양한 유형의 좋아요 요청 처리
-//  *     description: 공지사항, 멤버십, 인플루언서, 상점에 대한 좋아요 요청을 처리합니다.
-//  *     parameters:
-//  *       - in: path
-//  *         name: param
-//  *         schema:
-//  *           type: string
-//  *         required: true
-//  *         description: 좋아요 요청의 유형 (likeNotice, likeMembership, likeInfluencer, likeStore 중 하나)
-//  *     requestBody:
-//  *       required: true
-//  *       content:
-//  *         application/json:
-//  *           schema:
-//  *             type: object
-//  *             properties:
-//  *               noticeId:
-//  *                 type: string
-//  *                 description: 공지사항 ID (likeNotice 요청시 필요)
-//  *               influencerId:
-//  *                 type: string
-//  *                 description: 인플루언서 ID (likeInfluencer 요청시 필요)
-//  *               storeId:
-//  *                 type: string
-//  *                 description: 상점 ID (likeStore 요청시 필요)
-//  *               membershipId:
-//  *                 type: string
-//  *                 description: 멤버십 ID (likeMembership 요청시 필요)
-//  *     responses:
-//  *       200:
-//  *         description: 좋아요 요청 성공 (이미 좋아요가 있는 경우)
-//  *       201:
-//  *         description: 새로운 좋아요 생성 성공
-//  *       401:
-//  *         description: 인증 토큰 누락 또는 유효하지 않은 토큰
-//  *       500:
-//  *         description: 서버 내부 오류
-//  */
+/**
+ * @swagger
+ * /api/like:
+ *   post:
+ *     summary: 다양한 유형의 좋아요 요청 처리
+ *     description: 공지사항, 멤버십, 인플루언서, 상점에 대한 좋아요 요청을 처리합니다.
+ *     parameters:
+ *       - in: path
+ *         name: param
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: 좋아요 요청의 유형 (likeNotice, likeMembership, likeInfluencer, likeStore 중 하나)
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               noticeId:
+ *                 type: string
+ *                 description: 공지사항 ID (likeNotice 요청시 필요)
+ *               influencerId:
+ *                 type: string
+ *                 description: 인플루언서 ID (likeInfluencer 요청시 필요)
+ *               storeId:
+ *                 type: string
+ *                 description: 상점 ID (likeStore 요청시 필요)
+ *               membershipId:
+ *                 type: string
+ *                 description: 멤버십 ID (likeMembership 요청시 필요)
+ *     responses:
+ *       200:
+ *         description: 좋아요 요청 성공 (이미 좋아요가 있는 경우)
+ *       201:
+ *         description: 새로운 좋아요 생성 성공
+ *       401:
+ *         description: 인증 토큰 누락 또는 유효하지 않은 토큰
+ *       500:
+ *         description: 서버 내부 오류
+ */
 
 const handler = async (req: any, context: any) => {
   console.log('context :', context);
